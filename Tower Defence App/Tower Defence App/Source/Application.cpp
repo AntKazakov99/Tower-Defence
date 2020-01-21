@@ -157,6 +157,11 @@ void Application::Run()
 	// Цикл работы приложения
 	while (running)
 	{
-		
+		EventHandling();
 	}
+}
+
+void Application::SetMainWindow(Window* window)
+{
+	mainWindow = window;
 }

@@ -1,14 +1,13 @@
 #pragma once
-#include <iostream>
-#include <SDL.h>
-
-using namespace std;
+#include "Window.h"
 
 // Отвечает за работу приложения
 class Application
 {
 	// Статус работы приложения
 	bool running = true;
+	// Главное окно приложения
+	Window* mainWindow;
 
 	// Обработка событий
 	void EventHandling();
@@ -16,6 +15,8 @@ class Application
 public:
 	// Запуск приложения
 	void Run();
+	// Задает главое окно приложения
+	void SetMainWindow(Window* window);
 
 };
 
