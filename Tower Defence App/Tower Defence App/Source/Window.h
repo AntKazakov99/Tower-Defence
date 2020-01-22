@@ -60,6 +60,22 @@ protected:
 	// Происходит при закрытии окна
 	virtual void Closed(SDL_WindowEvent e);
 
+	// Происходит при нажатии клавиши
+	virtual void KeyDown(SDL_KeyboardEvent e);
+	// Происходит при отпускании клавиши
+	virtual void KeyUp(SDL_KeyboardEvent e);
+	// Происходит при вводе текста
+	virtual void TextInput(SDL_TextInputEvent e);
+
+	// Происходит при перемещении указателя мыши
+	virtual void MouseMove(SDL_MouseButtonEvent e);
+	// Происходит при нажатии любой кнопки мыши
+	virtual void MouseDown(SDL_MouseButtonEvent e);
+	// Происходит при отпускании любой кнопки мыши
+	virtual void MouseUp(SDL_MouseButtonEvent e);
+	// Происходит при вращении колесика мыши
+	virtual void MouseWheel(SDL_MouseButtonEvent e);
+
 public:
 	~Window();
 
@@ -83,6 +99,22 @@ public:
 	void InvokeWindowEventFocusLost(SDL_WindowEvent e);
 	// Обработка SDL_WINDOWEVENT_CLOSE
 	void InvokeWindowEventClose(SDL_WindowEvent e);
+
+	// Обработка SDL_KEYDOWN
+	void InvokeEventKeyDown(SDL_KeyboardEvent e);
+	// Обработка SDL_KEYUP
+	void InvokeEventKeyUp(SDL_KeyboardEvent e);
+	// Обработка SDL_TEXTINPUT
+	void InvokeEventTextInput(SDL_TextInputEvent e);
+
+	// Обработка SDL_MOUSEMOTION
+	void InvokeEventMouseMotion(SDL_MouseButtonEvent e);
+	// Обработка SDL_MOUSEBUTTONDOWN
+	void InvokeEventMouseButtonDown(SDL_MouseButtonEvent e);
+	// Обработка SDL_MOUSEBUTTONUP
+	void InvokeEventMouseButtonUp(SDL_MouseButtonEvent e);
+	// Обработка SDL_MOUSEWHEEL
+	void InvokeEventMouseWheel(SDL_MouseButtonEvent e);
 
 	// Инициализация окна, обновление параметров рендеринга
 	void Initialize();

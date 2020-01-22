@@ -40,6 +40,40 @@ void Window::Closed(SDL_WindowEvent e)
 	// virtual
 }
 
+void Window::KeyDown(SDL_KeyboardEvent e)
+{
+	// virtual
+}
+
+void Window::KeyUp(SDL_KeyboardEvent e)
+{
+	// virtual
+}
+
+void Window::TextInput(SDL_TextInputEvent e)
+{
+}
+
+void Window::MouseMove(SDL_MouseButtonEvent e)
+{
+	// virtual
+}
+
+void Window::MouseDown(SDL_MouseButtonEvent e)
+{
+	// virtual
+}
+
+void Window::MouseUp(SDL_MouseButtonEvent e)
+{
+	// virtual
+}
+
+void Window::MouseWheel(SDL_MouseButtonEvent e)
+{
+	// virtual
+}
+
 Window::~Window()
 {
 	SDL_DestroyWindow(window);
@@ -98,6 +132,43 @@ void Window::InvokeWindowEventFocusLost(SDL_WindowEvent e)
 void Window::InvokeWindowEventClose(SDL_WindowEvent e)
 {
 	this->Closed(e);
+}
+
+void Window::InvokeEventKeyDown(SDL_KeyboardEvent e)
+{
+	this->KeyDown(e);
+}
+
+void Window::InvokeEventKeyUp(SDL_KeyboardEvent e)
+{
+	this->KeyUp(e);
+}
+
+void Window::InvokeEventTextInput(SDL_TextInputEvent e)
+{
+	this->TextInput(e);
+}
+
+void Window::InvokeEventMouseMotion(SDL_MouseButtonEvent e)
+{
+	this->MouseMove(e);
+
+	// Добавить обработку передвижения курсора над графическими элементами
+}
+
+void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
+{
+	this->MouseDown(e);
+}
+
+void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
+{
+	this->MouseUp(e);
+}
+
+void Window::InvokeEventMouseWheel(SDL_MouseButtonEvent e)
+{
+	this->MouseWheel(e);
 }
 
 void Window::Initialize()

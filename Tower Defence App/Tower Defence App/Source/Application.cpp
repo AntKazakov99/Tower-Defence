@@ -141,33 +141,78 @@ void Application::EventHandling()
 				break;
 			}
 			break;
+
 		case SDL_EventType::SDL_KEYDOWN:
-			cout << "SDL event type: Key down event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventKeyDown(e.key);
+				}
+			}
 			break;
 		case SDL_EventType::SDL_KEYUP:
-			cout << "SDL event type: Key up event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventKeyUp(e.key);
+				}
+			}
 			break;
 		case SDL_EventType::SDL_TEXTEDITING:
 			cout << "SDL event type: Text editing event\n";
 			break;
 		case SDL_EventType::SDL_TEXTINPUT:
-			cout << "SDL event type: Text input event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventTextInput(e.text);
+				}
+			}
 			break;
 		case SDL_EventType::SDL_KEYMAPCHANGED:
 			cout << "SDL event type: Key map changing event\n";
 			break;
+
 		case SDL_EventType::SDL_MOUSEMOTION:
-			cout << "SDL event type: Mouse motion event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventMouseMotion(e.button);
+				}
+			}
 			break;
 		case SDL_EventType::SDL_MOUSEBUTTONDOWN:
-			cout << "SDL event type: Mouse button down event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventMouseButtonDown(e.button);
+				}
+			}
 			break;
 		case SDL_EventType::SDL_MOUSEBUTTONUP:
-			cout << "SDL event type: Mouse button up event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventMouseButtonUp(e.button);
+				}
+			}
 			break;
 		case SDL_EventType::SDL_MOUSEWHEEL:
-			cout << "SDL event type: Mouse wheel event\n";
+			for (int i = 0; i < windows.size(); i++)
+			{
+				if (e.window.windowID == windows[i]->GetID())
+				{
+					windows[i]->InvokeEventMouseWheel(e.button);
+				}
+			}
 			break;
+
 		case SDL_EventType::SDL_JOYAXISMOTION:
 			cout << "SDL event type: Joystick axis motion event\n";
 			break;
@@ -189,6 +234,7 @@ void Application::EventHandling()
 		case SDL_EventType::SDL_JOYDEVICEREMOVED:
 			cout << "SDL event type: Joystick device removed event\n";
 			break;
+
 		case SDL_EventType::SDL_CONTROLLERAXISMOTION:
 			cout << "SDL event type: Game controller axis motion event\n";
 			break;
