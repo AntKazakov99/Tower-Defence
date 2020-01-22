@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "Window.h"
 
 // Отвечает за работу приложения

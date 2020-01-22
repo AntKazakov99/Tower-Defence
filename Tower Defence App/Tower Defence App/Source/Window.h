@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include <SDL.h>
+#include <SDL_image.h>
+#include "VisualElement.h"
 
 using namespace std;
 
@@ -27,6 +30,8 @@ class Window
 	SDL_Window* window;
 	// SDL Параметры рендеринга окна
 	SDL_Renderer* renderer;
+	// Список отображаемых элементов
+	vector<VisualElement*> vElements;
 	// Идентификатор окна
 	int id;
 	// Заголовок окна
@@ -146,6 +151,10 @@ public:
 	void SetVSync(bool isVSync);
 	// Возвращает статус работы вертикальной синхронизации
 	bool GetVSync();
+	// Добавляет новый элемент в список отображаемых объектов
+	void AddVisualElement(VisualElement* vElement);
+	// Удаляет элемент из списка отображаемых объектов
+	void RemoveVisualElement(VisualElement* vElement);
 
 };
 

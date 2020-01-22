@@ -153,23 +153,37 @@ void Window::InvokeEventTextInput(SDL_TextInputEvent e)
 void Window::InvokeEventMouseMotion(SDL_MouseButtonEvent e)
 {
 	this->MouseMove(e);
-
-	// Добавить обработку передвижения курсора над графическими элементами
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseMotion(e);
+	}
 }
 
 void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
 {
 	this->MouseDown(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseButtonDown(e);
+	}
 }
 
 void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
 {
 	this->MouseUp(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseButtonUp(e);
+	}
 }
 
 void Window::InvokeEventMouseWheel(SDL_MouseButtonEvent e)
 {
 	this->MouseWheel(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseWheel(e);
+	}
 }
 
 void Window::Initialize()
@@ -199,7 +213,15 @@ void Window::Initialize()
 void Window::UpdateLayout()
 {
 	SDL_RenderClear(renderer);
-
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		SDL_RenderCopy(
+			renderer,
+			vElements[i]->GetTexture(),
+			0,
+			0
+		);
+	}
 	SDL_RenderPresent(renderer);
 }
 
@@ -295,4 +317,33 @@ void Window::SetVSync(bool vSync)
 bool Window::GetVSync()
 {
 	return vSync;
+}
+
+void Window::AddVisualElement(VisualElement* vElement)
+{
+	bool inserted = false;
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		if (!inserted && vElements[i]->GetZIndex() > vElement->GetZIndex())
+		{
+			vElements.insert(vElements.begin() + i, vElement);
+			inserted = true;
+		}
+	}
+	if (!inserted)
+	{
+		vElements.push_back(vElement);
+	}
+	cout << "vElements size: " << vElements.size();
+}
+
+void Window::RemoveVisualElement(VisualElement* vElement)
+{
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		if (vElements[i]  == vElement)
+		{
+			vElements.erase(vElements.begin() + i--);
+		}
+	}
 }

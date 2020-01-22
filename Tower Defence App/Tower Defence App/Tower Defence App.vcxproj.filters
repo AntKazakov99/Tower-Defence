@@ -30,6 +30,9 @@
     <ClCompile Include="Source\Window.cpp">
       <Filter>Исходные файлы\Приложение</Filter>
     </ClCompile>
+    <ClCompile Include="Source\VisualElement.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="Source\Window.h">
       <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VisualElement.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -263,6 +263,10 @@ void Application::EventHandling()
 Application::Application()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
+	IMG_Init(
+		IMG_InitFlags::IMG_INIT_JPG |
+		IMG_InitFlags::IMG_INIT_PNG
+	);
 }
 
 void Application::Run()
