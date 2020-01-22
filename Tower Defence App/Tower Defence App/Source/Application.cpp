@@ -11,7 +11,7 @@ void Application::EventHandling()
 		{
 		case SDL_EventType::SDL_QUIT:
 			cout << "SDL event type: Quit event\n";
-			running = false;
+				running = false;
 			break;
 		case SDL_EventType::SDL_DISPLAYEVENT:
 			cout << "SDL event type: Display event - ";
@@ -26,56 +26,118 @@ void Application::EventHandling()
 			}
 			break;
 		case SDL_EventType::SDL_WINDOWEVENT:
-			cout << "SDL event type: Window event - ";
 			switch (e.window.event)
 			{
 			case SDL_WindowEventID::SDL_WINDOWEVENT_SHOWN:
-				cout << "Shown\n";
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_HIDDEN:
-				cout << "Hidden\n";
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_EXPOSED:
-				cout << "Exposed\n";
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_MOVED:
-				cout << "Moved\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventMoved(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_RESIZED:
-				cout << "Resized\n";
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_SIZE_CHANGED:
-				cout << "Size changed\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventSizeChanged(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_MINIMIZED:
-				cout << "Minimized\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventMinimized(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_MAXIMIZED:
-				cout << "Maximized\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventMaximized(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_RESTORED:
-				cout << "Restored\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventRestored(e.window);
+					}
+				}				
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_ENTER:
-				cout << "Enter\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventEnter(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_LEAVE:
-				cout << "Leave\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventLeave(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_FOCUS_GAINED:
-				cout << "Focus gained\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventFocusGained(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_FOCUS_LOST:
-				cout << "Focus lost\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventFocusLost(e.window);
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_CLOSE:
-				cout << "Close\n";
+				for (int i = 0; i < windows.size(); i++)
+				{
+					if (e.window.windowID == windows[i]->GetID())
+					{
+						windows[i]->InvokeWindowEventClose(e.window);
+						Window* deletedWindow = windows[i];
+						for (int j = 0; j < windows.size(); j++)
+						{
+							if (windows[j] == deletedWindow)
+							{
+								windows.erase(windows.cbegin() + j--);
+							}
+						}
+						delete deletedWindow;
+					}
+				}
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_TAKE_FOCUS:
-				cout << "Take focus\n";
 				break;
 			case SDL_WindowEventID::SDL_WINDOWEVENT_HIT_TEST:
-				cout << "Hit test\n";
 				break;
 			}
 			break;
@@ -166,7 +228,7 @@ void Application::Run()
 	}
 }
 
-void Application::SetMainWindow(Window* window)
+void Application::AddWindow(Window* window)
 {
-	mainWindow = window;
+	windows.push_back(window);
 }

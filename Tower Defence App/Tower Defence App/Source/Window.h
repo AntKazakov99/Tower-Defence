@@ -12,6 +12,14 @@ enum WindowMode
 	Fullscreen = SDL_WindowFlags::SDL_WINDOW_FULLSCREEN
 };
 
+// Определяет положение окна (свернуто, восстановлено или развернуто)
+enum WindowState
+{
+	Restored = 0,
+	Minimized = SDL_WindowFlags::SDL_WINDOW_MINIMIZED,
+	Maximized = SDL_WindowFlags::SDL_WINDOW_MAXIMIZED
+};
+
 // Позволяет создавать, настраивать и отображать содержимое окна
 class Window
 {
@@ -19,6 +27,8 @@ class Window
 	SDL_Window* window;
 	// SDL Параметры рендеринга окна
 	SDL_Renderer* renderer;
+	// Идентификатор окна
+	int id;
 	// Заголовок окна
 	string title;
 	// Ширина окна
@@ -27,12 +37,57 @@ class Window
 	int height = 576;
 	// Режим работы окна
 	WindowMode windowMode = WindowMode::Windowed;
+	// Указывает восстановлено, свернуто или развернуто окно
+	WindowState windowState = WindowState::Restored;
 	// Статус работы вертикальной синхронизации
 	bool vSync = false;
 
+protected:
+	// Происходит при изменении расположения окна
+	virtual void LocationChanged(SDL_WindowEvent e);
+	// Происходит при изменении размеров окна
+	virtual void SizeChanged(SDL_WindowEvent e);
+	// Происходит, когда изменяется свойство WindowState окна
+	virtual void StateChanged(SDL_WindowEvent e);
+	// Происходит, когда указатель мыши попадает внутрь границ окна
+	virtual void MouseEnter(SDL_WindowEvent e);
+	// Происходит, когда указатель мыши покидает границы данного элемента
+	virtual void MouseLeave(SDL_WindowEvent e);
+	// Происходит при перемещении окна на передний план
+	virtual void Activated(SDL_WindowEvent e);
+	// Происходит при перемещении окна на задний план
+	virtual void Deactivated(SDL_WindowEvent e);
+	// Происходит при закрытии окна
+	virtual void Closed(SDL_WindowEvent e);
+
 public:
+	~Window();
+
+	// Обработка события SDL_WINDOWEVENT_MOVED
+	void InvokeWindowEventMoved(SDL_WindowEvent e);
+	// Обработка события SDL_WINDOWEVENT_SIZE_CHANGED
+	void InvokeWindowEventSizeChanged(SDL_WindowEvent e);
+	// Обработка события SDL_WINDOWEVENT_MINIMIZED
+	void InvokeWindowEventMinimized(SDL_WindowEvent e);
+	// Обработка события SDL_WINDOWEVENT_MAXIMIZED
+	void InvokeWindowEventMaximized(SDL_WindowEvent e);
+	// Обработка события SDL_WINDOWEVENT_RESTORED
+	void InvokeWindowEventRestored(SDL_WindowEvent e);
+	// Обработка SDL_WINDOWEVENT_ENTER
+	void InvokeWindowEventEnter(SDL_WindowEvent e);
+	// Обработка SDL_WINDOWEVENT_LEAVE
+	void InvokeWindowEventLeave(SDL_WindowEvent e);
+	// Обработка SDL_WINDOWEVENT_FOCUS_GAINED
+	void InvokeWindowEventFocusGained(SDL_WindowEvent e);
+	// Обработка SDL_WINDOWEVENT_FOCUS_LOST
+	void InvokeWindowEventFocusLost(SDL_WindowEvent e);
+	// Обработка SDL_WINDOWEVENT_CLOSE
+	void InvokeWindowEventClose(SDL_WindowEvent e);
+
 	// Инициализация окна, обновление параметров рендеринга
 	void Initialize();
+	// Возвращает значение идентификатора окна
+	int GetID();
 	// Задает заголовок окна
 	void SetTitle(string title);
 	// Возвращает заголовок окна
@@ -49,6 +104,10 @@ public:
 	void SetWindowMode(WindowMode windowMode);
 	// Возвращает режим работы окна
 	WindowMode GetWindowMode();
+	// Задает восстановлено, свернуто или развернуто окно
+	void SetWindowState(WindowState windowState);
+	// Возвращает восстановлено, свернуто или развернуто окно
+	WindowState GetWindowState();
 	// Задает статус работы вертикальной синхронизации
 	void SetVSync(bool isVSync);
 	// Возвращает статус работы вертикальной синхронизации
