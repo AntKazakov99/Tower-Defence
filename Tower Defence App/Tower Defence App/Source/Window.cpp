@@ -52,6 +52,7 @@ void Window::KeyUp(SDL_KeyboardEvent e)
 
 void Window::TextInput(SDL_TextInputEvent e)
 {
+	// virtual
 }
 
 void Window::MouseMove(SDL_MouseButtonEvent e)
