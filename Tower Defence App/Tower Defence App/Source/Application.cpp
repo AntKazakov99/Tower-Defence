@@ -271,6 +271,11 @@ void Application::Run()
 	while (running)
 	{
 		EventHandling();
+		for (int i = 0; i < windows.size(); i++)
+		{
+			windows[i]->UpdateLayout();
+		}
+
 	}
 }
 

@@ -196,6 +196,13 @@ void Window::Initialize()
 	);
 }
 
+void Window::UpdateLayout()
+{
+	SDL_RenderClear(renderer);
+
+	SDL_RenderPresent(renderer);
+}
+
 int Window::GetID()
 {
 	return SDL_GetWindowID(window);
