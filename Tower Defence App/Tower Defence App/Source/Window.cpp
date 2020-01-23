@@ -55,7 +55,7 @@ void Window::TextInput(SDL_TextInputEvent e)
 	// virtual
 }
 
-void Window::MouseMove(SDL_MouseButtonEvent e)
+void Window::MouseMove(SDL_MouseMotionEvent e)
 {
 	// virtual
 }
@@ -70,7 +70,7 @@ void Window::MouseUp(SDL_MouseButtonEvent e)
 	// virtual
 }
 
-void Window::MouseWheel(SDL_MouseButtonEvent e)
+void Window::MouseWheel(SDL_MouseWheelEvent e)
 {
 	// virtual
 }
@@ -150,40 +150,24 @@ void Window::InvokeEventTextInput(SDL_TextInputEvent e)
 	this->TextInput(e);
 }
 
-void Window::InvokeEventMouseMotion(SDL_MouseButtonEvent e)
+void Window::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
 {
 	this->MouseMove(e);
-	for (int i = 0; i < vElements.size(); i++)
-	{
-		vElements[i]->InvokeEventMouseMotion(e);
-	}
 }
 
 void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
 {
 	this->MouseDown(e);
-	for (int i = 0; i < vElements.size(); i++)
-	{
-		vElements[i]->InvokeEventMouseButtonDown(e);
-	}
 }
 
 void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
 {
 	this->MouseUp(e);
-	for (int i = 0; i < vElements.size(); i++)
-	{
-		vElements[i]->InvokeEventMouseButtonUp(e);
-	}
 }
 
-void Window::InvokeEventMouseWheel(SDL_MouseButtonEvent e)
+void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
 {
 	this->MouseWheel(e);
-	for (int i = 0; i < vElements.size(); i++)
-	{
-		vElements[i]->InvokeEventMouseWheel(e);
-	}
 }
 
 void Window::Initialize()
@@ -215,12 +199,17 @@ void Window::UpdateLayout()
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(
+			renderer,
+			vElements[i]->GetSurface()
+		);
 		SDL_RenderCopy(
 			renderer,
-			vElements[i]->GetTexture(),
-			0,
-			0
+			texture,
+			vElements[i]->GetSourceRectangle(),
+			vElements[i]->GetDestinationRectangle()
 		);
+		SDL_DestroyTexture(texture);
 	}
 	SDL_RenderPresent(renderer);
 }

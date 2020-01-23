@@ -181,7 +181,7 @@ void Application::EventHandling()
 			{
 				if (e.window.windowID == windows[i]->GetID())
 				{
-					windows[i]->InvokeEventMouseMotion(e.button);
+					windows[i]->InvokeEventMouseMotion(e.motion);
 				}
 			}
 			break;
@@ -208,7 +208,7 @@ void Application::EventHandling()
 			{
 				if (e.window.windowID == windows[i]->GetID())
 				{
-					windows[i]->InvokeEventMouseWheel(e.button);
+					windows[i]->InvokeEventMouseWheel(e.wheel);
 				}
 			}
 			break;
@@ -267,6 +267,7 @@ Application::Application()
 		IMG_InitFlags::IMG_INIT_JPG |
 		IMG_InitFlags::IMG_INIT_PNG
 	);
+	TTF_Init();
 }
 
 void Application::Run()

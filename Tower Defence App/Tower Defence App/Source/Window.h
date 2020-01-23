@@ -73,13 +73,13 @@ protected:
 	virtual void TextInput(SDL_TextInputEvent e);
 
 	// Происходит при перемещении указателя мыши
-	virtual void MouseMove(SDL_MouseButtonEvent e);
+	virtual void MouseMove(SDL_MouseMotionEvent e);
 	// Происходит при нажатии любой кнопки мыши
 	virtual void MouseDown(SDL_MouseButtonEvent e);
 	// Происходит при отпускании любой кнопки мыши
 	virtual void MouseUp(SDL_MouseButtonEvent e);
 	// Происходит при вращении колесика мыши
-	virtual void MouseWheel(SDL_MouseButtonEvent e);
+	virtual void MouseWheel(SDL_MouseWheelEvent e);
 
 public:
 	~Window();
@@ -113,13 +113,13 @@ public:
 	void InvokeEventTextInput(SDL_TextInputEvent e);
 
 	// Обработка SDL_MOUSEMOTION
-	void InvokeEventMouseMotion(SDL_MouseButtonEvent e);
+	void InvokeEventMouseMotion(SDL_MouseMotionEvent e);	
 	// Обработка SDL_MOUSEBUTTONDOWN
 	void InvokeEventMouseButtonDown(SDL_MouseButtonEvent e);
 	// Обработка SDL_MOUSEBUTTONUP
 	void InvokeEventMouseButtonUp(SDL_MouseButtonEvent e);
 	// Обработка SDL_MOUSEWHEEL
-	void InvokeEventMouseWheel(SDL_MouseButtonEvent e);
+	void InvokeEventMouseWheel(SDL_MouseWheelEvent e);
 
 	// Инициализация окна, обновление параметров рендеринга
 	void Initialize();
