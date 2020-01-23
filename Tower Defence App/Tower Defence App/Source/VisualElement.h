@@ -1,59 +1,112 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
+using namespace std;
 
 // Отображаемый объект
 class VisualElement
 {
-	// Текстура объекта
-	SDL_Texture* texture = NULL;
-	// Размер и расположение отображаемой части текстуры
-	SDL_Rect* srcRect = NULL;
-	// Размер и расположение объекта при отображении
-	SDL_Rect* dstRect = NULL;
 	// Порядок отображения элемента в плоскости Z
 	int zIndex = 0;
-	// Указывает, находится ли указатель мыши над данным элементом
-	bool isMouseOver = false;
 
-protected:
-	// Происходит, когда указатель мыши попадает внутрь границ данного элемента
-	virtual void MouseEnter(SDL_MouseMotionEvent e);
-	// Происходит, когда указатель мыши покидает границы данного элемента
-	virtual void MouseLeave(SDL_MouseMotionEvent e);
-	// Происходит при перемещении указателя мыши над данным элементом
-	virtual void MouseMove(SDL_MouseMotionEvent e);
-	// Происходит при нажатии любой кнопки мыши в тот момент, когда указатель мыши находится над данным элементом
-	virtual void MouseDown(SDL_MouseButtonEvent e);
-	// Происходит при отпускании любой кнопки мыши в тот момент, когда указатель мыши находится над данным элементом
-	virtual void MouseUp(SDL_MouseButtonEvent e);
-	// Происходит при вращении колесика мыши в тот момент, когда указатель мыши находится над данным элементом
-	virtual void MouseWheel(SDL_MouseWheelEvent e);
-
-	// Задает текстуру объекта
-	void SetTexture(SDL_Texture* texture);
-	// Возвращает текстуру объекта
-	SDL_Texture* GetTexture();
-	// Задает размер и расположение отображаемой части текстуры
-	void SetSourceRect(SDL_Rect* srcRect);
-	// Возвращает размер и расположение отображаемой части текстуры
-	SDL_Rect* GetSourceRect();
-	// Задает размер и расположение отображаемой части текстуры
-	void SetDestinationRect(SDL_Rect* dstRect);
-	// Возвращает размер и расположение объекта при отображении
-	SDL_Rect* GetDestinationRect();
+public:
+	// Возвращает изображение на основе которого будет отображаться объект
+	virtual SDL_Surface* GetSurface() = 0;
+	// Возвращает размер и расположение отображаемой части изображения
+	virtual SDL_Rect* GetSourceRectangle() = 0;
+	// Возвращает размер и расположение объекта
+	virtual SDL_Rect* GetDestinationRectangle() = 0;
+	// Задает порядок отображения элемента в плоскости Z
+	void SetZIndex(int zIndex);
 	// Возвращает порядок отображения элемента в плоскости Z
 	int GetZIndex();
 
+};
+
+// Элемент для отображения текста
+class Text:
+	public VisualElement
+{
+	// Изображение текста
+	SDL_Surface* surface = NULL;
+	// Шрифт текста
+	TTF_Font* font = TTF_OpenFont("", 12);
+	// Отображаемый текст
+	string text = "";
+	// Путь до файла шрифта
+	string fontFile = "";
+	// Размер шрифта
+	int fontSize = 12;
+	// Цвет текста
+	SDL_Color foreground = { 0, 0, 0 };
+	// Размер и расположение объекта
+	SDL_Rect* dstRect = new SDL_Rect();
+
+	// Создание изображения из текста
+	void CreateSurface();
+
 public:
-	// Обработка SDL_MOUSEMOTION
-	void InvokeEventMouseMotion(SDL_MouseMotionEvent e);
-	// Обработка SDL_MOUSEBUTTONDOWN
-	void InvokeEventMouseButtonDown(SDL_MouseButtonEvent e);
-	// Обработка SDL_MOUSEBUTTONUP
-	void InvokeEventMouseButtonUp(SDL_MouseButtonEvent e);
-	// Обработка SDL_MOUSEWHEEL
-	void InvokeEventMouseWheel(SDL_MouseWheelEvent e);
+	// Возвращает расстояние между левой границей элемента и границей окна
+	int GetLeft();
+	// Задает расстояние между левой границей элемента и границей окна
+	void SetLeft(int left);
+	// Возвращает расстояние между верхней границей элемента и границей окна
+	int GetTop();
+	// Задает расстояние между верхней границей элемента и границей окна
+	void SetTop(int top);
+	// Возвращает отображаемый текст
+	const char* GetText();
+	// Задает отображаемый текст
+	void SetText(const char* text);
+	// Задает путь до шрифта отображаемого текста
+	void SetFontFile(const char* file);
+	// Возвращает размер шрифта
+	int GetFontSize();
+	// Задает размер шрифта
+	void SetFontSize(int pt);
+	// Возвращает цвет текста
+	SDL_Color GetForeground();
+	// Задает цвет текста
+	void SetForeground(SDL_Color foreground);
+
+	// Возвращает изображение на основе которого будет отображаться объект
+	SDL_Surface* GetSurface() override;
+	// Возвращает размер и расположение отображаемой части изображения
+	SDL_Rect* GetSourceRectangle() override;
+	// Возвращает размер и расположение объекта
+	SDL_Rect* GetDestinationRectangle() override;
+
+};
+
+// Простое изображение
+class Image:
+	public VisualElement
+{
+	// Изображение
+	SDL_Surface* surface;
+	// Размер и расположение отображаемой части изображения
+	SDL_Rect* srcRect;
+	// Размер и расположение объекта
+	SDL_Rect* dstRect;
+
+public:
+	// Задает изображение на основе которого будет отображаться объект
+	void SetSurface(SDL_Surface* surface);
+	// Задает размер и расположение отображаемой части изображения
+	void SetSourceRectangle(SDL_Rect* srcRect);
+	// Задает размер и расположение объекта
+	void SetDestinationRectangle(SDL_Rect* dstRect);
+
+	// Возвращает изображение на основе которого будет отображаться объект
+	SDL_Surface* GetSurface() override;
+	// Возвращает размер и расположение отображаемой части изображения
+	SDL_Rect* GetSourceRectangle() override;
+	// Возвращает размер и расположение объекта
+	SDL_Rect* GetDestinationRectangle() override;
 
 };
 

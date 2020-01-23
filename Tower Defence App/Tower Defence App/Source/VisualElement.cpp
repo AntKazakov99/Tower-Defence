@@ -1,63 +1,8 @@
 #include "VisualElement.h"
 
-void VisualElement::MouseEnter(SDL_MouseMotionEvent e)
+void VisualElement::SetZIndex(int zIndex)
 {
-	// virtual
-}
-
-void VisualElement::MouseLeave(SDL_MouseMotionEvent e)
-{
-	// virtual
-}
-
-void VisualElement::MouseMove(SDL_MouseMotionEvent e)
-{
-	// virtual
-}
-
-void VisualElement::MouseDown(SDL_MouseButtonEvent e)
-{
-	// virtual
-}
-
-void VisualElement::MouseUp(SDL_MouseButtonEvent e)
-{
-	// virtual
-}
-
-void VisualElement::MouseWheel(SDL_MouseWheelEvent e)
-{
-	// virtual
-}
-
-void VisualElement::SetTexture(SDL_Texture* texture)
-{
-	this->texture = texture;
-}
-
-SDL_Texture* VisualElement::GetTexture()
-{
-	return texture;
-}
-
-void VisualElement::SetSourceRect(SDL_Rect* srcRect)
-{
-	this->srcRect = srcRect;
-}
-
-SDL_Rect* VisualElement::GetSourceRect()
-{
-	return srcRect;
-}
-
-void VisualElement::SetDestinationRect(SDL_Rect* dstRect)
-{
-	this->dstRect = dstRect;
-}
-
-SDL_Rect* VisualElement::GetDestinationRect()
-{
-	return dstRect;
+	this->zIndex = zIndex;
 }
 
 int VisualElement::GetZIndex()
@@ -65,49 +10,125 @@ int VisualElement::GetZIndex()
 	return zIndex;
 }
 
-void VisualElement::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
+// Методы класса Text
+
+void Text::CreateSurface()
 {
-	// Проверяет находится ли курсор в пределах данного элемента
-	if (e.x >= dstRect->x && e.x <= dstRect->x + dstRect->w &&
-		e.y >= dstRect->y && e.y <= dstRect->y + dstRect->h)	
+	if (font)
 	{
-		if (!isMouseOver)
-		{
-			isMouseOver = true;
-			MouseEnter(e);
-		}
-		MouseMove(e);
-	}
-	else
-	{
-		if (isMouseOver)
-		{
-			isMouseOver = false;
-			MouseLeave(e);
-		}
+		SDL_FreeSurface(surface);
+		surface = TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground);
+		dstRect->h = surface->h;
+		dstRect->w = surface->w;
 	}
 }
 
-void VisualElement::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
+int Text::GetLeft()
 {
-	if (isMouseOver)
-	{
-		MouseDown(e);
-	}
+	return dstRect->x;
 }
 
-void VisualElement::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
+void Text::SetLeft(int left)
 {
-	if (isMouseOver)
-	{
-		MouseUp(e);
-	}
+	dstRect->x = left;
 }
 
-void VisualElement::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
+int Text::GetTop()
 {
-	if (isMouseOver)
-	{
-		MouseWheel(e);
-	}
+	return dstRect->y;
+}
+
+void Text::SetTop(int top)
+{
+	dstRect->y = top;
+}
+
+void Text::SetText(const char* text)
+{
+	this->text = text;
+	CreateSurface();
+}
+
+const char* Text::GetText()
+{
+	return text.c_str();
+}
+
+void Text::SetFontFile(const char* file)
+{
+	fontFile = file;
+	TTF_CloseFont(font);
+	font = TTF_OpenFont(fontFile.c_str(), fontSize);
+	CreateSurface();
+}
+
+void Text::SetFontSize(int pt)
+{
+	fontSize = pt;
+	TTF_CloseFont(font);
+	font = TTF_OpenFont(fontFile.c_str(), fontSize);
+	CreateSurface();
+}
+
+int Text::GetFontSize()
+{
+	return fontSize;
+}
+
+void Text::SetForeground(SDL_Color foreground)
+{
+	this->foreground = foreground;
+	CreateSurface();
+}
+
+SDL_Color Text::GetForeground()
+{
+	return foreground;
+}
+
+SDL_Surface* Text::GetSurface()
+{
+	return surface;
+}
+
+SDL_Rect* Text::GetSourceRectangle()
+{
+	return nullptr;
+}
+
+SDL_Rect* Text::GetDestinationRectangle()
+{
+	return dstRect;
+}
+
+// Методы класса Image
+
+void Image::SetSurface(SDL_Surface* surface)
+{
+	this->surface = surface;
+}
+
+void Image::SetSourceRectangle(SDL_Rect* srcRect)
+{
+	this->srcRect = srcRect;
+}
+
+void Image::SetDestinationRectangle(SDL_Rect* dstRect)
+{
+	this->dstRect = dstRect;
+}
+
+SDL_Surface* Image::GetSurface()
+{
+	return surface;
+}
+
+SDL_Rect* Image::GetSourceRectangle()
+{
+	return srcRect;
+}
+
+SDL_Rect* Image::GetDestinationRectangle()
+{
+	return dstRect;
 }
