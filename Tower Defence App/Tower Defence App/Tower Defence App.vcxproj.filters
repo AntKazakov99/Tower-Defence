@@ -31,6 +31,9 @@
       <Filter>Исходные файлы\Приложение</Filter>
     </ClCompile>
     <ClCompile Include="Source\VisualElement.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameWindow.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,6 +45,9 @@
       <Filter>Файлы заголовков\Приложение</Filter>
     </ClInclude>
     <ClInclude Include="Source\VisualElement.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameWindow.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

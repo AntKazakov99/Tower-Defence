@@ -1,11 +1,10 @@
 #include "Application.h"
+#include "GameWindow.h"
 
 int main(int argc, char* argv[])
 {
 	Application app;
-	Window* win = new Window();
-	win->Initialize();
-	app.AddWindow(win);
+	app.AddWindow(new GameWindow());
 	app.Run();
 	return 0;
 }
