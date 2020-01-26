@@ -1,5 +1,10 @@
 #include "Window.h"
 
+void Window::Tick(int deltaTime)
+{
+	// virtual
+}
+
 void Window::LocationChanged(SDL_WindowEvent e)
 {
 	// virtual
@@ -153,21 +158,38 @@ void Window::InvokeEventTextInput(SDL_TextInputEvent e)
 void Window::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
 {
 	this->MouseMove(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseMotion(e);
+	}
 }
 
 void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
 {
 	this->MouseDown(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseButtonDown(e);
+	}
 }
 
 void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
 {
 	this->MouseUp(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseButtonUp(e);
+	}
+
 }
 
 void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
 {
 	this->MouseWheel(e);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventMouseWheel(e);
+	}
 }
 
 void Window::Initialize()
@@ -196,6 +218,14 @@ void Window::Initialize()
 
 void Window::UpdateLayout()
 {
+	int tick = SDL_GetTicks();
+	Tick(tick - lastTick);
+	for (int i = 0; i < vElements.size(); i++)
+	{
+		vElements[i]->InvokeEventUpdate(tick - lastTick);
+	}
+	lastTick = tick;
+
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{

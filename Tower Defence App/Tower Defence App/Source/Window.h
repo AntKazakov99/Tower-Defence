@@ -46,8 +46,13 @@ class Window
 	WindowState windowState = WindowState::Restored;
 	// Статус работы вертикальной синхронизации
 	bool vSync = false;
+	//
+	int lastTick = SDL_GetTicks();
 
 protected:
+	// Происходит при каждом обновлении окна
+	virtual void Tick(int deltaTime);
+
 	// Происходит при изменении расположения окна
 	virtual void LocationChanged(SDL_WindowEvent e);
 	// Происходит при изменении размеров окна

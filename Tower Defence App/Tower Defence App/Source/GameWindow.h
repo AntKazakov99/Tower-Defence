@@ -1,6 +1,6 @@
 #pragma once
 #include "Window.h"
-#include <string>
+#include "Text.h"
 
 class GameWindow :
 	public Window

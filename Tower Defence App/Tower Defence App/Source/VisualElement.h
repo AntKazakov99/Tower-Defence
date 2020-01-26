@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <functional>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -10,10 +11,59 @@ using namespace std;
 // Отображаемый объект
 class VisualElement
 {
+	// Показывает находится ли курсор мыши внутри границ элемента
+	bool isMouseOver;
+	// Состояние нажатия на элемент
+	bool isPressed;
 	// Порядок отображения элемента в плоскости Z
 	int zIndex = 0;
 
+protected:
+	// Происходит перед каждым обновлением окна
+	function<void(VisualElement*, Uint32)> Update = [](VisualElement*, Uint32) { /*empty*/ };
+	// Происходит при клике по объекту
+	function<void(VisualElement*, SDL_MouseButtonEvent)> Click = [](VisualElement*, SDL_MouseButtonEvent) { /*empty*/ };
+	// Происходит, когда указатель мыши попадает внутрь границ элемента
+	function<void(VisualElement*, SDL_MouseMotionEvent)> MouseEnter = [](VisualElement*, SDL_MouseMotionEvent) { /*empty*/ };
+	// Происходит, когда указатель мыши покидает границы данного элемента
+	function<void(VisualElement*, SDL_MouseMotionEvent)> MouseLeave = [](VisualElement*, SDL_MouseMotionEvent) { /*empty*/ };
+	// Происходит при перемещении указателя мыши над данным элементом
+	function<void(VisualElement*, SDL_MouseMotionEvent)> MouseMove = [](VisualElement*, SDL_MouseMotionEvent) { /*empty*/ };
+	// Происходит при нажатии любой кнопки мыши над данным элементом
+	function<void(VisualElement*, SDL_MouseButtonEvent)> MouseDown = [](VisualElement*, SDL_MouseButtonEvent) { /*empty*/ };
+	// Происходит при отпускании любой кнопки мыши над данным элементом
+	function<void(VisualElement*, SDL_MouseButtonEvent)> MouseUp = [](VisualElement*, SDL_MouseButtonEvent) { /*empty*/ };
+	// Происходит при вращении колесика мыши над данным элементом
+	function<void(VisualElement*, SDL_MouseWheelEvent)> MouseWheel = [](VisualElement*, SDL_MouseWheelEvent) { /*empty*/ };
+
 public:
+	void InvokeEventUpdate(Uint32 deltaTime);
+	// Обработка SDL_MOUSEMOTION
+	void InvokeEventMouseMotion(SDL_MouseMotionEvent e);
+	// Обработка SDL_MOUSEBUTTONDOWN
+	void InvokeEventMouseButtonDown(SDL_MouseButtonEvent e);
+	// Обработка SDL_MOUSEBUTTONUP
+	void InvokeEventMouseButtonUp(SDL_MouseButtonEvent e);
+	// Обработка SDL_MOUSEWHEEL
+	void InvokeEventMouseWheel(SDL_MouseWheelEvent e);
+
+	// Задает метод для обработки события Update
+	void SetUpdate(void Update(VisualElement*, Uint32));
+	// Задает метод для обработки события Click
+	void SetClick(void Click(VisualElement*, SDL_MouseButtonEvent));
+	// Задает метод для обработки события MouseEnter
+	void SetMouseEnter(void MouseEnter(VisualElement*, SDL_MouseMotionEvent));
+	// Задает метод для обработки события MouseLeave
+	void SetMouseLeave(void MouseLeave(VisualElement*, SDL_MouseMotionEvent));
+	// Задает метод для обработки события MouseMove
+	void SetMouseMove(void MouseMove(VisualElement*, SDL_MouseMotionEvent));
+	// Задает метод для обработки события MouseDown
+	void SetMouseDown(void MouseDown(VisualElement*, SDL_MouseButtonEvent));
+	// Задает метод для обработки события MouseUp
+	void SetMouseUp(void MouseUp(VisualElement*, SDL_MouseButtonEvent));
+	// Задает метод для обработки события MouseDown
+	void SetMouseWheel(void MouseWheel(VisualElement*, SDL_MouseWheelEvent));
+
 	// Возвращает изображение на основе которого будет отображаться объект
 	virtual SDL_Surface* GetSurface() = 0;
 	// Возвращает размер и расположение отображаемой части изображения
@@ -26,87 +76,3 @@ public:
 	int GetZIndex();
 
 };
-
-// Элемент для отображения текста
-class Text:
-	public VisualElement
-{
-	// Изображение текста
-	SDL_Surface* surface = NULL;
-	// Шрифт текста
-	TTF_Font* font = TTF_OpenFont("", 12);
-	// Отображаемый текст
-	string text = "";
-	// Путь до файла шрифта
-	string fontFile = "";
-	// Размер шрифта
-	int fontSize = 12;
-	// Цвет текста
-	SDL_Color foreground = { 0, 0, 0 };
-	// Размер и расположение объекта
-	SDL_Rect* dstRect = new SDL_Rect();
-
-	// Создание изображения из текста
-	void CreateSurface();
-
-public:
-	// Возвращает расстояние между левой границей элемента и границей окна
-	int GetLeft();
-	// Задает расстояние между левой границей элемента и границей окна
-	void SetLeft(int left);
-	// Возвращает расстояние между верхней границей элемента и границей окна
-	int GetTop();
-	// Задает расстояние между верхней границей элемента и границей окна
-	void SetTop(int top);
-	// Возвращает отображаемый текст
-	const char* GetText();
-	// Задает отображаемый текст
-	void SetText(const char* text);
-	// Задает путь до шрифта отображаемого текста
-	void SetFontFile(const char* file);
-	// Возвращает размер шрифта
-	int GetFontSize();
-	// Задает размер шрифта
-	void SetFontSize(int pt);
-	// Возвращает цвет текста
-	SDL_Color GetForeground();
-	// Задает цвет текста
-	void SetForeground(SDL_Color foreground);
-
-	// Возвращает изображение на основе которого будет отображаться объект
-	SDL_Surface* GetSurface() override;
-	// Возвращает размер и расположение отображаемой части изображения
-	SDL_Rect* GetSourceRectangle() override;
-	// Возвращает размер и расположение объекта
-	SDL_Rect* GetDestinationRectangle() override;
-
-};
-
-// Простое изображение
-class Image:
-	public VisualElement
-{
-	// Изображение
-	SDL_Surface* surface;
-	// Размер и расположение отображаемой части изображения
-	SDL_Rect* srcRect;
-	// Размер и расположение объекта
-	SDL_Rect* dstRect;
-
-public:
-	// Задает изображение на основе которого будет отображаться объект
-	void SetSurface(SDL_Surface* surface);
-	// Задает размер и расположение отображаемой части изображения
-	void SetSourceRectangle(SDL_Rect* srcRect);
-	// Задает размер и расположение объекта
-	void SetDestinationRectangle(SDL_Rect* dstRect);
-
-	// Возвращает изображение на основе которого будет отображаться объект
-	SDL_Surface* GetSurface() override;
-	// Возвращает размер и расположение отображаемой части изображения
-	SDL_Rect* GetSourceRectangle() override;
-	// Возвращает размер и расположение объекта
-	SDL_Rect* GetDestinationRectangle() override;
-
-};
-

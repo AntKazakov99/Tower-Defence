@@ -10,18 +10,14 @@ void Application::EventHandling()
 		switch (e.type)
 		{
 		case SDL_EventType::SDL_QUIT:
-			cout << "SDL event type: Quit event\n";
 				running = false;
 			break;
 		case SDL_EventType::SDL_DISPLAYEVENT:
-			cout << "SDL event type: Display event - ";
 			switch (e.display.event)
 			{
 			case SDL_DisplayEventID::SDL_DISPLAYEVENT_NONE:
-				cout << "None\n";
 				break;
 			case SDL_DisplayEventID::SDL_DISPLAYEVENT_ORIENTATION:
-				cout << "Orientation\n";
 				break;
 			}
 			break;
@@ -161,7 +157,6 @@ void Application::EventHandling()
 			}
 			break;
 		case SDL_EventType::SDL_TEXTEDITING:
-			cout << "SDL event type: Text editing event\n";
 			break;
 		case SDL_EventType::SDL_TEXTINPUT:
 			for (int i = 0; i < windows.size(); i++)
@@ -173,7 +168,6 @@ void Application::EventHandling()
 			}
 			break;
 		case SDL_EventType::SDL_KEYMAPCHANGED:
-			cout << "SDL event type: Key map changing event\n";
 			break;
 
 		case SDL_EventType::SDL_MOUSEMOTION:
@@ -214,44 +208,31 @@ void Application::EventHandling()
 			break;
 
 		case SDL_EventType::SDL_JOYAXISMOTION:
-			cout << "SDL event type: Joystick axis motion event\n";
 			break;
 		case SDL_EventType::SDL_JOYBALLMOTION:
-			cout << "SDL event type: Joystick trackball motion event\n";
 			break;
 		case SDL_EventType::SDL_JOYHATMOTION:
-			cout << "SDL event type: Joystick hat position change event\n";
 			break;
 		case SDL_EventType::SDL_JOYBUTTONDOWN:
-			cout << "SDL event type: Joystick button down event\n";
 			break;
 		case SDL_EventType::SDL_JOYBUTTONUP:
-			cout << "SDL event type: Joystick button up event\n";
 			break;
 		case SDL_EventType::SDL_JOYDEVICEADDED:
-			cout << "SDL event type: Joystick device added event\n";
 			break;
 		case SDL_EventType::SDL_JOYDEVICEREMOVED:
-			cout << "SDL event type: Joystick device removed event\n";
 			break;
 
 		case SDL_EventType::SDL_CONTROLLERAXISMOTION:
-			cout << "SDL event type: Game controller axis motion event\n";
 			break;
 		case SDL_EventType::SDL_CONTROLLERBUTTONDOWN:
-			cout << "SDL event type: Game controller button down event\n";
 			break;
 		case SDL_EventType::SDL_CONTROLLERBUTTONUP:
-			cout << "SDL event type: Game controller button up event\n";
 			break;
 		case SDL_EventType::SDL_CONTROLLERDEVICEADDED:
-			cout << "SDL event type: Game controller device added event\n";
 			break;
 		case SDL_EventType::SDL_CONTROLLERDEVICEREMOVED:
-			cout << "SDL event type: Game controller device removed event\n";
 			break;
 		case SDL_EventType::SDL_CONTROLLERDEVICEREMAPPED:
-			cout << "SDL event type: Game controller device remapped event\n";
 			break;
 
 			// Other events
@@ -280,7 +261,6 @@ void Application::Run()
 		{
 			windows[i]->UpdateLayout();
 		}
-
 	}
 }
 

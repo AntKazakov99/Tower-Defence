@@ -1,5 +1,107 @@
 #include "VisualElement.h"
 
+void VisualElement::InvokeEventUpdate(Uint32 deltaTime)
+{
+	Update(this, deltaTime);
+}
+
+void VisualElement::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
+{
+	SDL_Rect* dstRect = GetDestinationRectangle();
+	if (dstRect)
+	{
+		if (e.x >= dstRect->x && e.x <= dstRect->x + dstRect->w &&
+			e.y >= dstRect->y && e.y <= dstRect->y + dstRect->h)
+		{
+			if (!isMouseOver)
+			{
+				isMouseOver = true;
+				MouseEnter(this, e);
+			}
+			MouseMove(this, e);
+		}
+		else
+		{
+			if (isMouseOver)
+			{
+				isMouseOver = false;
+				MouseLeave(this, e);
+			}
+			isPressed = false;
+		}
+	}
+}
+
+void VisualElement::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
+{
+	if (isMouseOver)
+	{
+		MouseDown(this, e);
+		isPressed = true;
+	}
+}
+
+void VisualElement::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
+{
+	if (isMouseOver)
+	{
+		MouseUp(this, e);
+		if (isPressed)
+		{
+			Click(this, e);
+		}
+	}
+	isPressed = false;
+}
+
+void VisualElement::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
+{
+	if (isMouseOver)
+	{
+		MouseWheel(this, e);
+	}
+}
+
+void VisualElement::SetUpdate(void Update(VisualElement*, Uint32))
+{
+	this->Update = Update;
+}
+
+void VisualElement::SetClick(void Click(VisualElement*, SDL_MouseButtonEvent))
+{
+	this->Click = Click;
+}
+
+void VisualElement::SetMouseEnter(void MouseEnter(VisualElement*, SDL_MouseMotionEvent))
+{
+	this->MouseEnter = MouseEnter;
+}
+
+void VisualElement::SetMouseLeave(void MouseLeave(VisualElement*, SDL_MouseMotionEvent))
+{
+	this->MouseLeave = MouseLeave;
+}
+
+void VisualElement::SetMouseMove(void MouseMove(VisualElement*, SDL_MouseMotionEvent))
+{
+	this->MouseMove = MouseMove;
+}
+
+void VisualElement::SetMouseDown(void MouseDown(VisualElement*, SDL_MouseButtonEvent))
+{
+	this->MouseDown = MouseDown;
+}
+
+void VisualElement::SetMouseUp(void MouseUp(VisualElement*, SDL_MouseButtonEvent))
+{
+	this->MouseUp = MouseUp;
+}
+
+void VisualElement::SetMouseWheel(void MouseWheel(VisualElement*, SDL_MouseWheelEvent))
+{
+	this->MouseWheel = MouseWheel;
+}
+
 void VisualElement::SetZIndex(int zIndex)
 {
 	this->zIndex = zIndex;
@@ -8,127 +110,4 @@ void VisualElement::SetZIndex(int zIndex)
 int VisualElement::GetZIndex()
 {
 	return zIndex;
-}
-
-// Методы класса Text
-
-void Text::CreateSurface()
-{
-	if (font)
-	{
-		SDL_FreeSurface(surface);
-		surface = TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground);
-		dstRect->h = surface->h;
-		dstRect->w = surface->w;
-	}
-}
-
-int Text::GetLeft()
-{
-	return dstRect->x;
-}
-
-void Text::SetLeft(int left)
-{
-	dstRect->x = left;
-}
-
-int Text::GetTop()
-{
-	return dstRect->y;
-}
-
-void Text::SetTop(int top)
-{
-	dstRect->y = top;
-}
-
-void Text::SetText(const char* text)
-{
-	this->text = text;
-	CreateSurface();
-}
-
-const char* Text::GetText()
-{
-	return text.c_str();
-}
-
-void Text::SetFontFile(const char* file)
-{
-	fontFile = file;
-	TTF_CloseFont(font);
-	font = TTF_OpenFont(fontFile.c_str(), fontSize);
-	CreateSurface();
-}
-
-void Text::SetFontSize(int pt)
-{
-	fontSize = pt;
-	TTF_CloseFont(font);
-	font = TTF_OpenFont(fontFile.c_str(), fontSize);
-	CreateSurface();
-}
-
-int Text::GetFontSize()
-{
-	return fontSize;
-}
-
-void Text::SetForeground(SDL_Color foreground)
-{
-	this->foreground = foreground;
-	CreateSurface();
-}
-
-SDL_Color Text::GetForeground()
-{
-	return foreground;
-}
-
-SDL_Surface* Text::GetSurface()
-{
-	return surface;
-}
-
-SDL_Rect* Text::GetSourceRectangle()
-{
-	return nullptr;
-}
-
-SDL_Rect* Text::GetDestinationRectangle()
-{
-	return dstRect;
-}
-
-// Методы класса Image
-
-void Image::SetSurface(SDL_Surface* surface)
-{
-	this->surface = surface;
-}
-
-void Image::SetSourceRectangle(SDL_Rect* srcRect)
-{
-	this->srcRect = srcRect;
-}
-
-void Image::SetDestinationRectangle(SDL_Rect* dstRect)
-{
-	this->dstRect = dstRect;
-}
-
-SDL_Surface* Image::GetSurface()
-{
-	return surface;
-}
-
-SDL_Rect* Image::GetSourceRectangle()
-{
-	return srcRect;
-}
-
-SDL_Rect* Image::GetDestinationRectangle()
-{
-	return dstRect;
 }
