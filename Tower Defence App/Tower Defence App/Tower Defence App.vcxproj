@@ -19,7 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\GameWindow.cpp" />
+    <ClCompile Include="Source\Image.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Object.cpp" />
+    <ClCompile Include="Source\Text.cpp" />
+    <ClCompile Include="Source\VisualElement.cpp" />
+    <ClCompile Include="Source\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\GameWindow.h" />
+    <ClInclude Include="Source\Image.h" />
+    <ClInclude Include="Source\Object.h" />
+    <ClInclude Include="Source\Text.h" />
+    <ClInclude Include="Source\VisualElement.h" />
+    <ClInclude Include="Source\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

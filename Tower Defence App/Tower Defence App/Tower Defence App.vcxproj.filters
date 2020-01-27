@@ -13,10 +13,60 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\Приложение">
+      <UniqueIdentifier>{699bcd6a-5d4d-4284-b436-1cade44f58c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Приложение">
+      <UniqueIdentifier>{bd875d1f-182c-4704-9df5-21556dd2efe5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VisualElement.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameWindow.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VisualElement.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameWindow.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
