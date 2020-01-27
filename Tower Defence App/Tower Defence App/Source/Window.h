@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "VisualElement.h"
+#include "Object.h"
 
 using namespace std;
 
@@ -24,16 +25,17 @@ enum WindowState
 };
 
 // Позволяет создавать, настраивать и отображать содержимое окна
-class Window
+class Window:
+	public Object
 {
 	// SDL реализация окна
-	SDL_Window* window;
+	SDL_Window* window = NULL;
 	// SDL Параметры рендеринга окна
-	SDL_Renderer* renderer;
+	SDL_Renderer* renderer = NULL;
 	// Список отображаемых элементов
 	vector<VisualElement*> vElements;
 	// Идентификатор окна
-	int id;
+	int id = 0;
 	// Заголовок окна
 	string title;
 	// Ширина окна
@@ -46,12 +48,12 @@ class Window
 	WindowState windowState = WindowState::Restored;
 	// Статус работы вертикальной синхронизации
 	bool vSync = false;
-	//
+	// Время последнего обновления окна
 	int lastTick = SDL_GetTicks();
 
 protected:
 	// Происходит при каждом обновлении окна
-	virtual void Tick(int deltaTime);
+	virtual void Tick(Uint32 deltaTime);
 
 	// Происходит при изменении расположения окна
 	virtual void LocationChanged(SDL_WindowEvent e);
@@ -132,30 +134,30 @@ public:
 	void UpdateLayout();
 	// Возвращает значение идентификатора окна
 	int GetID();
-	// Задает заголовок окна
-	void SetTitle(string title);
 	// Возвращает заголовок окна
 	const char* GetTitle();
-	// Задает ширину окна
-	void SetWidth(int width);
+	// Задает заголовок окна
+	void SetTitle(string title);
 	// Возвращает ширину окна
 	const int GetWidth();
-	// Задает высоту окна
-	void SetHeight(int height);
+	// Задает ширину окна
+	void SetWidth(int width);
 	// Возвращает высоту окна
 	const int GetHeight();
-	// Задает режим работы окна
-	void SetWindowMode(WindowMode windowMode);
+	// Задает высоту окна
+	void SetHeight(int height);
 	// Возвращает режим работы окна
 	WindowMode GetWindowMode();
-	// Задает восстановлено, свернуто или развернуто окно
-	void SetWindowState(WindowState windowState);
+	// Задает режим работы окна
+	void SetWindowMode(WindowMode windowMode);
 	// Возвращает восстановлено, свернуто или развернуто окно
 	WindowState GetWindowState();
-	// Задает статус работы вертикальной синхронизации
-	void SetVSync(bool isVSync);
+	// Задает восстановлено, свернуто или развернуто окно
+	void SetWindowState(WindowState windowState);
 	// Возвращает статус работы вертикальной синхронизации
 	bool GetVSync();
+	// Задает статус работы вертикальной синхронизации
+	void SetVSync(bool isVSync);
 	// Добавляет новый элемент в список отображаемых объектов
 	void AddVisualElement(VisualElement* vElement);
 	// Удаляет элемент из списка отображаемых объектов

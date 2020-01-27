@@ -42,6 +42,9 @@
     <ClCompile Include="Source\Image.cpp">
       <Filter>Исходные файлы\Приложение</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Object.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -60,6 +63,9 @@
       <Filter>Файлы заголовков\Приложение</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object.h">
       <Filter>Файлы заголовков\Приложение</Filter>
     </ClInclude>
   </ItemGroup>

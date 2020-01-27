@@ -1,11 +1,11 @@
 #include "VisualElement.h"
 
-void VisualElement::InvokeEventUpdate(Uint32 deltaTime)
+void VisualElement::InvokeEventUpdate(Object* owner, Uint32 deltaTime)
 {
-	Update(this, deltaTime);
+	Update(owner, this, deltaTime);
 }
 
-void VisualElement::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
+void VisualElement::InvokeEventMouseMotion(Object* owner, SDL_MouseMotionEvent e)
 {
 	SDL_Rect* dstRect = GetDestinationRectangle();
 	if (dstRect)
@@ -16,88 +16,88 @@ void VisualElement::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
 			if (!isMouseOver)
 			{
 				isMouseOver = true;
-				MouseEnter(this, e);
+				MouseEnter(owner, this, e);
 			}
-			MouseMove(this, e);
+			MouseMove(owner, this, e);
 		}
 		else
 		{
 			if (isMouseOver)
 			{
 				isMouseOver = false;
-				MouseLeave(this, e);
+				MouseLeave(owner, this, e);
 			}
 			isPressed = false;
 		}
 	}
 }
 
-void VisualElement::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
+void VisualElement::InvokeEventMouseButtonDown(Object* owner, SDL_MouseButtonEvent e)
 {
 	if (isMouseOver)
 	{
-		MouseDown(this, e);
+		MouseDown(owner, this, e);
 		isPressed = true;
 	}
 }
 
-void VisualElement::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
+void VisualElement::InvokeEventMouseButtonUp(Object* owner, SDL_MouseButtonEvent e)
 {
 	if (isMouseOver)
 	{
-		MouseUp(this, e);
+		MouseUp(owner, this, e);
 		if (isPressed)
 		{
-			Click(this, e);
+			Click(owner, this, e);
 		}
 	}
 	isPressed = false;
 }
 
-void VisualElement::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
+void VisualElement::InvokeEventMouseWheel(Object* owner, SDL_MouseWheelEvent e)
 {
 	if (isMouseOver)
 	{
-		MouseWheel(this, e);
+		MouseWheel(owner, this, e);
 	}
 }
 
-void VisualElement::SetUpdate(void Update(VisualElement*, Uint32))
+void VisualElement::SetUpdate(void Update(Object*, Object*, Uint32))
 {
 	this->Update = Update;
 }
 
-void VisualElement::SetClick(void Click(VisualElement*, SDL_MouseButtonEvent))
+void VisualElement::SetClick(void Click(Object*, Object*, SDL_MouseButtonEvent))
 {
 	this->Click = Click;
 }
 
-void VisualElement::SetMouseEnter(void MouseEnter(VisualElement*, SDL_MouseMotionEvent))
+void VisualElement::SetMouseEnter(void MouseEnter(Object*, Object*, SDL_MouseMotionEvent))
 {
 	this->MouseEnter = MouseEnter;
 }
 
-void VisualElement::SetMouseLeave(void MouseLeave(VisualElement*, SDL_MouseMotionEvent))
+void VisualElement::SetMouseLeave(void MouseLeave(Object*, Object*, SDL_MouseMotionEvent))
 {
 	this->MouseLeave = MouseLeave;
 }
 
-void VisualElement::SetMouseMove(void MouseMove(VisualElement*, SDL_MouseMotionEvent))
+void VisualElement::SetMouseMove(void MouseMove(Object*, Object*, SDL_MouseMotionEvent))
 {
 	this->MouseMove = MouseMove;
 }
 
-void VisualElement::SetMouseDown(void MouseDown(VisualElement*, SDL_MouseButtonEvent))
+void VisualElement::SetMouseDown(void MouseDown(Object*, Object*, SDL_MouseButtonEvent))
 {
 	this->MouseDown = MouseDown;
 }
 
-void VisualElement::SetMouseUp(void MouseUp(VisualElement*, SDL_MouseButtonEvent))
+void VisualElement::SetMouseUp(void MouseUp(Object*, Object*, SDL_MouseButtonEvent))
 {
 	this->MouseUp = MouseUp;
 }
 
-void VisualElement::SetMouseWheel(void MouseWheel(VisualElement*, SDL_MouseWheelEvent))
+void VisualElement::SetMouseWheel(void MouseWheel(Object*, Object*, SDL_MouseWheelEvent))
 {
 	this->MouseWheel = MouseWheel;
 }

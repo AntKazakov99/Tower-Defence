@@ -1,6 +1,6 @@
 #include "Window.h"
 
-void Window::Tick(int deltaTime)
+void Window::Tick(Uint32 deltaTime)
 {
 	// virtual
 }
@@ -160,7 +160,7 @@ void Window::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
 	this->MouseMove(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseMotion(e);
+		vElements[i]->InvokeEventMouseMotion(this, e);
 	}
 }
 
@@ -169,7 +169,7 @@ void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
 	this->MouseDown(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseButtonDown(e);
+		vElements[i]->InvokeEventMouseButtonDown(this, e);
 	}
 }
 
@@ -178,7 +178,7 @@ void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
 	this->MouseUp(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseButtonUp(e);
+		vElements[i]->InvokeEventMouseButtonUp(this, e);
 	}
 
 }
@@ -188,7 +188,7 @@ void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
 	this->MouseWheel(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseWheel(e);
+		vElements[i]->InvokeEventMouseWheel(this, e);
 	}
 }
 
@@ -222,7 +222,7 @@ void Window::UpdateLayout()
 	Tick(tick - lastTick);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventUpdate(tick - lastTick);
+		vElements[i]->InvokeEventUpdate(this, tick - lastTick);
 	}
 	lastTick = tick;
 
@@ -249,6 +249,11 @@ int Window::GetID()
 	return SDL_GetWindowID(window);
 }
 
+const char* Window::GetTitle()
+{
+	return title.c_str();
+}
+
 void Window::SetTitle(string title)
 {
 	this->title = title;
@@ -258,9 +263,9 @@ void Window::SetTitle(string title)
 	}
 }
 
-const char* Window::GetTitle()
+const int Window::GetWidth()
 {
-	return title.c_str();
+	return width;
 }
 
 void Window::SetWidth(int width)
@@ -271,9 +276,9 @@ void Window::SetWidth(int width)
 	}
 }
 
-const int Window::GetWidth()
+const int Window::GetHeight()
 {
-	return width;
+	return height;
 }
 
 void Window::SetHeight(int height)
@@ -284,9 +289,9 @@ void Window::SetHeight(int height)
 	}
 }
 
-const int Window::GetHeight()
+WindowMode Window::GetWindowMode()
 {
-	return height;
+	return windowMode;
 }
 
 void Window::SetWindowMode(WindowMode windowMode)
@@ -298,9 +303,9 @@ void Window::SetWindowMode(WindowMode windowMode)
 	}
 }
 
-WindowMode Window::GetWindowMode()
+WindowState Window::GetWindowState()
 {
-	return windowMode;
+	return windowState;
 }
 
 void Window::SetWindowState(WindowState windowState)
@@ -322,20 +327,15 @@ void Window::SetWindowState(WindowState windowState)
 	}
 }
 
-WindowState Window::GetWindowState()
+bool Window::GetVSync()
 {
-	return windowState;
+	return vSync;
 }
 
 void Window::SetVSync(bool vSync)
 {
 	this->vSync = vSync;
 	Initialize();
-}
-
-bool Window::GetVSync()
-{
-	return vSync;
 }
 
 void Window::AddVisualElement(VisualElement* vElement)
@@ -353,7 +353,6 @@ void Window::AddVisualElement(VisualElement* vElement)
 	{
 		vElements.push_back(vElement);
 	}
-	cout << "vElements size: " << vElements.size();
 }
 
 void Window::RemoveVisualElement(VisualElement* vElement)
