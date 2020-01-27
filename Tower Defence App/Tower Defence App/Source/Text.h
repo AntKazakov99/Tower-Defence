@@ -6,7 +6,7 @@ class Text :
 	public VisualElement
 {
 	// Изображение текста
-	SDL_Surface* surface = NULL;
+	VisualResource* resource = new VisualResource();
 	// Шрифт текста
 	TTF_Font* font = TTF_OpenFont("", 12);
 	// Отображаемый текст
@@ -48,7 +48,7 @@ public:
 	void SetForeground(SDL_Color foreground);
 
 	// Возвращает изображение на основе которого будет отображаться объект
-	SDL_Surface* GetSurface() override;
+	VisualResource* GetVisualResource() override;
 	// Возвращает размер и расположение отображаемой части изображения
 	SDL_Rect* GetSourceRectangle() override;
 	// Возвращает размер и расположение объекта

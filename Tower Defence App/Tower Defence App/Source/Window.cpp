@@ -229,17 +229,19 @@ void Window::UpdateLayout()
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(
-			renderer,
-			vElements[i]->GetSurface()
-		);
-		SDL_RenderCopy(
-			renderer,
-			texture,
-			vElements[i]->GetSourceRectangle(),
-			vElements[i]->GetDestinationRectangle()
-		);
-		SDL_DestroyTexture(texture);
+		if (vElements[i]->GetVisualResource())
+		{
+			if (vElements[i]->GetVisualResource()->GetIsUpdated())
+			{
+				vElements[i]->GetVisualResource()->UpdateTexture(renderer);
+			}
+			SDL_RenderCopy(
+				renderer,
+				vElements[i]->GetVisualResource()->GetTexture(),
+				vElements[i]->GetSourceRectangle(),
+				vElements[i]->GetDestinationRectangle()
+			);
+		}
 	}
 	SDL_RenderPresent(renderer);
 }

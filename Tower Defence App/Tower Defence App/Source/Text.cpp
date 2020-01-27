@@ -4,10 +4,12 @@ void Text::CreateSurface()
 {
 	if (font)
 	{
-		SDL_FreeSurface(surface);
-		surface = TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground);
-		dstRect->h = surface->h;
-		dstRect->w = surface->w;
+		resource->SetSurface(TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground));
+		if (resource->GetSurface())
+		{
+			dstRect->h = resource->GetSurface()->h;
+			dstRect->w = resource->GetSurface()->w;
+		}
 	}
 }
 
@@ -74,9 +76,9 @@ SDL_Color Text::GetForeground()
 	return foreground;
 }
 
-SDL_Surface* Text::GetSurface()
+VisualResource* Text::GetVisualResource()
 {
-	return surface;
+	return resource;
 }
 
 SDL_Rect* Text::GetSourceRectangle()
