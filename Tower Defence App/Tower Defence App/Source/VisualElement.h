@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Object.h"
+#include "VisualResource.h"
 
 using namespace std;
 
@@ -67,7 +68,7 @@ public:
 	void SetMouseWheel(void MouseWheel(Object*, Object*, SDL_MouseWheelEvent));
 
 	// Возвращает изображение на основе которого будет отображаться объект
-	virtual SDL_Surface* GetSurface() = 0;
+	virtual VisualResource* GetVisualResource() = 0;
 	// Возвращает размер и расположение отображаемой части изображения
 	virtual SDL_Rect* GetSourceRectangle() = 0;
 	// Возвращает размер и расположение объекта

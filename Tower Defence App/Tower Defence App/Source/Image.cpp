@@ -1,8 +1,8 @@
 #include "Image.h"
 
-void Image::SetSurface(SDL_Surface* surface)
+void Image::SetVisualResource(VisualResource* resource)
 {
-	this->surface = surface;
+	this->resource = resource;
 }
 
 void Image::SetSourceRectangle(SDL_Rect* srcRect)
@@ -15,9 +15,9 @@ void Image::SetDestinationRectangle(SDL_Rect* dstRect)
 	this->dstRect = dstRect;
 }
 
-SDL_Surface* Image::GetSurface()
+VisualResource* Image::GetVisualResource()
 {
-	return surface;
+	return resource;
 }
 
 SDL_Rect* Image::GetSourceRectangle()
