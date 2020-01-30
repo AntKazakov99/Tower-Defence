@@ -7,8 +7,8 @@ void Text::CreateSurface()
 		resource->SetSurface(TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground));
 		if (resource->GetSurface())
 		{
-			dstRect->h = resource->GetSurface()->h;
-			dstRect->w = resource->GetSurface()->w;
+			SetWidth(resource->GetSurface()->w);
+			SetHeight(resource->GetSurface()->h);
 		}
 	}
 }
@@ -22,32 +22,6 @@ Text::Text(const char* text):
 	text(text)
 {
 	CreateSurface();
-}
-
-int Text::GetLeft()
-{
-	return dstRect->x;
-}
-
-void Text::SetLeft(int left)
-{
-	dstRect->x = left;
-}
-
-int Text::GetTop()
-{
-	return dstRect->y;
-}
-
-void Text::SetTop(int top)
-{
-	dstRect->y = top;
-}
-
-void Text::SetLocation(int left, int top)
-{
-	dstRect->x = left;
-	dstRect->y = top;
 }
 
 void Text::SetText(const char* text)
@@ -101,9 +75,4 @@ VisualResource* Text::GetVisualResource()
 SDL_Rect* Text::GetSourceRectangle()
 {
 	return nullptr;
-}
-
-SDL_Rect* Text::GetDestinationRectangle()
-{
-	return dstRect;
 }

@@ -7,6 +7,9 @@
 class GameWindow :
 	public Window
 {
+	VisualResource* enemyResource = new VisualResource();
+	// Тестовый объект - Враг
+	Image* enemy = new Image();
 
 public:
 	// Текущее здоровье игрока
@@ -15,6 +18,9 @@ public:
 	int Gold = 100;
 
 	GameWindow();
+
+	// Загрузка пользовательского интерфейса игры
+	void LoadInterface();
 
 };
 

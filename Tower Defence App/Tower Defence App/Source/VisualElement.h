@@ -20,6 +20,8 @@ class VisualElement:
 	bool isPressed = false;
 	// Порядок отображения элемента в плоскости Z
 	int zIndex = 0;
+	// Размер и расположение объекта
+	SDL_Rect* dstRect = NULL;
 
 protected:
 	// Происходит перед каждым обновлением окна
@@ -71,8 +73,29 @@ public:
 	virtual VisualResource* GetVisualResource() = 0;
 	// Возвращает размер и расположение отображаемой части изображения
 	virtual SDL_Rect* GetSourceRectangle() = 0;
+
 	// Возвращает размер и расположение объекта
-	virtual SDL_Rect* GetDestinationRectangle() = 0;
+	SDL_Rect* GetDestinationRectangle();
+	// Задает размер и расположение объекта
+	void SetDestinationRectangle(SDL_Rect* dstRect);
+	// Задает расположение элемента
+	void SetLocation(int left, int top);
+	// Возвращает расстояние между левой границей элемента и границей окна
+	int GetLeft();
+	// Задает расстояние между левой границей элемента и границей окна
+	void SetLeft(int left);
+	// Возвращает расстояние между верхней границей элемента и границей окна
+	int GetTop();
+	// Задает расстояние между верхней границей элемента и границей окна
+	void SetTop(int top);
+	// Возвращает ширину элемента
+	int GetWidth();
+	// Задает ширину элемента
+	void SetWidth(int width);
+	// Возвращает высоту элемента
+	int GetHeight();
+	// Задает высоту элемента
+	void SetHeight(int height);
 	// Задает порядок отображения элемента в плоскости Z
 	void SetZIndex(int zIndex);
 	// Возвращает порядок отображения элемента в плоскости Z

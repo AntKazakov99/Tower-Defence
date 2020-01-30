@@ -17,8 +17,6 @@ class Text :
 	TTF_Font* font = TTF_OpenFont(fontFile.c_str(), fontSize);
 	// Цвет текста
 	SDL_Color foreground = { 0, 0, 0 };
-	// Размер и расположение объекта
-	SDL_Rect* dstRect = new SDL_Rect();
 
 	// Создание изображения из текста
 	void CreateSurface();
@@ -28,16 +26,6 @@ public:
 	// Конструктор с предустановкой текста
 	Text(const char* text);
 
-	// Возвращает расстояние между левой границей элемента и границей окна
-	int GetLeft();
-	// Задает расстояние между левой границей элемента и границей окна
-	void SetLeft(int left);
-	// Возвращает расстояние между верхней границей элемента и границей окна
-	int GetTop();
-	// Задает расстояние между верхней границей элемента и границей окна
-	void SetTop(int top);
-	// Задает расположение элемента
-	void SetLocation(int left, int top);
 	// Возвращает отображаемый текст
 	const char* GetText();
 	// Задает отображаемый текст
@@ -57,7 +45,5 @@ public:
 	VisualResource* GetVisualResource() override;
 	// Возвращает размер и расположение отображаемой части изображения
 	SDL_Rect* GetSourceRectangle() override;
-	// Возвращает размер и расположение объекта
-	SDL_Rect* GetDestinationRectangle() override;
 
 };

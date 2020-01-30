@@ -111,3 +111,109 @@ int VisualElement::GetZIndex()
 {
 	return zIndex;
 }
+
+SDL_Rect* VisualElement::GetDestinationRectangle()
+{
+	return dstRect;
+}
+
+void VisualElement::SetDestinationRectangle(SDL_Rect* dstRect)
+{
+	delete this->dstRect;
+	this->dstRect = dstRect;
+}
+
+int VisualElement::GetLeft()
+{
+	if (dstRect)
+	{
+		return dstRect->x;
+	}
+	else
+	{
+		return 0;
+	}
+
+}
+
+void VisualElement::SetLeft(int left)
+{
+	if (!dstRect)
+	{
+		dstRect = new SDL_Rect();
+	}
+	dstRect->x = left;
+}
+
+int VisualElement::GetTop()
+{
+	if (dstRect)
+	{
+		return dstRect->y;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void VisualElement::SetTop(int top)
+{
+	if (!dstRect)
+	{
+		dstRect = new SDL_Rect();
+	}
+	dstRect->y = top;
+}
+
+void VisualElement::SetLocation(int left, int top)
+{
+	if (!dstRect)
+	{
+		dstRect = new SDL_Rect();
+	}
+	dstRect->x = left;
+	dstRect->y = top;
+}
+
+int VisualElement::GetWidth()
+{
+	if (dstRect)
+	{
+		return dstRect->w;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void VisualElement::SetWidth(int width)
+{
+	if (!dstRect)
+	{
+		dstRect = new SDL_Rect();
+	}
+	dstRect->w = width;
+}
+
+int VisualElement::GetHeight()
+{
+	if (dstRect)
+	{
+		return dstRect->h;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void VisualElement::SetHeight(int height)
+{
+	if (!dstRect)
+	{
+		dstRect = new SDL_Rect();
+	}
+	dstRect->h = height;
+}
