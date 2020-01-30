@@ -7,9 +7,6 @@
 class GameWindow :
 	public Window
 {
-	VisualResource* enemyResource = new VisualResource();
-	// Тестовый объект - Враг
-	Image* enemy = new Image();
 
 public:
 	// Текущее здоровье игрока
