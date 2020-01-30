@@ -7,14 +7,14 @@ class Text :
 {
 	// Изображение текста
 	VisualResource* resource = new VisualResource();
-	// Шрифт текста
-	TTF_Font* font = TTF_OpenFont("", 12);
 	// Отображаемый текст
 	string text = "";
 	// Путь до файла шрифта
-	string fontFile = "";
+	string fontFile = ".\\Resources\\Fonts\\RetroVille NC.ttf";
 	// Размер шрифта
 	int fontSize = 12;
+	// Шрифт текста
+	TTF_Font* font = TTF_OpenFont(fontFile.c_str(), fontSize);
 	// Цвет текста
 	SDL_Color foreground = { 0, 0, 0 };
 	// Размер и расположение объекта
@@ -24,6 +24,10 @@ class Text :
 	void CreateSurface();
 
 public:
+	Text();
+	// Конструктор с предустановкой текста
+	Text(const char* text);
+
 	// Возвращает расстояние между левой границей элемента и границей окна
 	int GetLeft();
 	// Задает расстояние между левой границей элемента и границей окна
@@ -32,6 +36,8 @@ public:
 	int GetTop();
 	// Задает расстояние между верхней границей элемента и границей окна
 	void SetTop(int top);
+	// Задает расположение элемента
+	void SetLocation(int left, int top);
 	// Возвращает отображаемый текст
 	const char* GetText();
 	// Задает отображаемый текст

@@ -13,6 +13,17 @@ void Text::CreateSurface()
 	}
 }
 
+Text::Text()
+{
+	CreateSurface();
+}
+
+Text::Text(const char* text):
+	text(text)
+{
+	CreateSurface();
+}
+
 int Text::GetLeft()
 {
 	return dstRect->x;
@@ -30,6 +41,12 @@ int Text::GetTop()
 
 void Text::SetTop(int top)
 {
+	dstRect->y = top;
+}
+
+void Text::SetLocation(int left, int top)
+{
+	dstRect->x = left;
 	dstRect->y = top;
 }
 

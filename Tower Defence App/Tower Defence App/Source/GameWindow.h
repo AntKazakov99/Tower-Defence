@@ -7,25 +7,12 @@
 class GameWindow :
 	public Window
 {
-public:
-	// Расположение файла со шрифтами
-	string FontFile = ".\\Resources\\Fonts\\RetroVille NC.ttf";
 
+public:
 	// Текущее здоровье игрока
 	int Health = 30;
 	// Текущее золото игрока
 	int Gold = 100;
-
-	// Кнопка загрузки первого уровня
-	Text* LevelOneButton = new Text();
-	// Кнопка загрузки второго уровня
-	Text* LevelTwoButton = new Text();
-	// Отображение текущего здоровья
-	Text* HealthText = new Text();
-	// Отображение текущего золота
-	Text* GoldText = new Text();
-	// Интерфейс игры
-	Image* GameInterface = new Image();
 
 	GameWindow();
 

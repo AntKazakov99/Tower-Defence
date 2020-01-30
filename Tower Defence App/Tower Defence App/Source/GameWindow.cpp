@@ -6,25 +6,23 @@ GameWindow::GameWindow()
 	Initialize();
 
 	// Добавление на экран кнопки загрузки первого уровня
-	LevelOneButton->SetFontFile(FontFile.c_str());
-	LevelOneButton->SetLeft(805);
+	Text* LevelOneButton = new Text("Уровень 1");
+	LevelOneButton->SetForeground({ 255, 255, 255 });
+	LevelOneButton->SetLocation(805, 100);
 	LevelOneButton->SetZIndex(100);
-	LevelOneButton->SetText("Уровень 1");
-	LevelOneButton->SetTop(100);
 	LevelOneButton->SetClick(LevelOneButton_Click);
 	AddVisualElement(LevelOneButton);
 
 	// Добавление на экран кнопки загрузки второго уровня
-	LevelTwoButton->SetFontFile(FontFile.c_str());
-	LevelTwoButton->SetLeft(805);
+	Text* LevelTwoButton = new Text("Уровень 2");
+	LevelTwoButton->SetForeground({ 255, 255, 255 });
+	LevelTwoButton->SetLocation(805, 110);
 	LevelTwoButton->SetZIndex(100);
-	LevelTwoButton->SetText("Уровень 2");
-	LevelTwoButton->SetTop(110);
 	LevelTwoButton->SetClick(LevelTwoButton_Click);
 	AddVisualElement(LevelTwoButton);
 
 	// Добавление на экран текущего здоровья
-	HealthText->SetFontFile(FontFile.c_str());
+	Text* HealthText = new Text();
 	HealthText->SetForeground({ 255, 0, 0 });
 	HealthText->SetLeft(805);
 	HealthText->SetZIndex(100);
@@ -32,10 +30,9 @@ GameWindow::GameWindow()
 	AddVisualElement(HealthText);
 
 	// Добавление на экран текущего золота
-	GoldText->SetFontFile(FontFile.c_str());
+	Text* GoldText = new Text();
 	GoldText->SetForeground({ 255, 255, 0 });
-	GoldText->SetLeft(805);
-	GoldText->SetTop(20);
+	GoldText->SetLocation(805, 20);
 	GoldText->SetZIndex(100);
 	GoldText->SetUpdate(GoldText_Update);
 	AddVisualElement(GoldText);
