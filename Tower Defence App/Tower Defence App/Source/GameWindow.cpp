@@ -4,70 +4,54 @@ GameWindow::GameWindow()
 {
 	SetTitle("Tower Defence ver.0.0.1");
 	Initialize();
-	LoadInterface();
+
+	// Добавляет текст "Текущее здоровье:" на экран
+	Text* currentHealthText = new Text("Текущее здоровье: ");
+	currentHealthText->SetLocation(805, 0);
+	currentHealthText->SetForeground({ 255, 255, 255 });
+	AddVisualElement(currentHealthText);
+
+	// Выводит показатель здоровья игрока на экран
+	healthText->SetLocation(805 + currentHealthText->GetWidth(), 0);
+	healthText->SetForeground({ 255, 0, 0 });
+	AddVisualElement(healthText);
+
+	// Добавляет текст "Текущее золото:" на экран
+	Text* currentGoldText = new Text("Текущее золото: ");
+	currentGoldText->SetLocation(805, 15);
+	currentGoldText->SetForeground({ 255, 255, 255 });
+	AddVisualElement(currentGoldText);
+
+	// Выводит показатель золота игрока на экран
+	goldText->SetLocation(805 + currentGoldText->GetWidth(), 15);
+	goldText->SetForeground({ 255, 255, 0 });
+	AddVisualElement(goldText);
+
 }
 
-void GameWindow::LoadInterface()
+int GameWindow::GetHealth()
 {
-	// Добавление на экран текущего здоровья
-	Text* HealthText = new Text();
-	HealthText->SetForeground({ 255, 0, 0 });
-	HealthText->SetLeft(805);
-	HealthText->SetZIndex(100);
-	HealthText->SetUpdate(HealthText_Update);
-	AddVisualElement(HealthText);
-
-	// Добавление на экран текущего золота
-	Text* GoldText = new Text();
-	GoldText->SetForeground({ 255, 255, 0 });
-	GoldText->SetLocation(805, 15);
-	GoldText->SetZIndex(100);
-	GoldText->SetUpdate(GoldText_Update);
-	AddVisualElement(GoldText);
-
-	// Добавление на экран кнопки загрузки первого уровня
-	Text* LevelOneButton = new Text("Уровень 1");
-	LevelOneButton->SetForeground({ 255, 255, 255 });
-	LevelOneButton->SetLocation(805, 100);
-	LevelOneButton->SetZIndex(100);
-	LevelOneButton->SetClick(LevelOneButton_Click);
-	AddVisualElement(LevelOneButton);
-
-	// Добавление на экран кнопки загрузки второго уровня
-	Text* LevelTwoButton = new Text("Уровень 2");
-	LevelTwoButton->SetForeground({ 255, 255, 255 });
-	LevelTwoButton->SetLocation(805, 115);
-	LevelTwoButton->SetZIndex(100);
-	LevelTwoButton->SetClick(LevelTwoButton_Click);
-	AddVisualElement(LevelTwoButton);
+	return health;
 }
 
-void GoldText_Update(Object* owner, Object* sender, Uint32 deltaTime)
+void GameWindow::SetHealth(int Health)
 {
-	GameWindow* window = (GameWindow*)owner;
-	Text* text = (Text*)sender;
-	if (strcmp(text->GetText(), ("Текущее золото: " + to_string(window->Gold)).c_str()))
-	{
-		text->SetText(("Текущее золото: " + to_string(window->Gold)).c_str());
-	}
+	health = Health;
+	healthText->SetText(to_string(health).c_str());
 }
 
-void HealthText_Update(Object* owner, Object* sender, Uint32 deltaTime)
+int GameWindow::GetGold()
 {
-	GameWindow* window = (GameWindow*)owner;
-	Text* text = (Text*)sender;
-	if (strcmp(text->GetText(), ("Текущее здоровье: " + to_string(window->Health)).c_str()))
-	{
-		text->SetText(("Текущее здоровье: " + to_string(window->Health)).c_str());
-	}
+	return gold;
 }
 
-void LevelOneButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+void GameWindow::SetGold(int Gold)
 {
-
+	gold = Gold;
+	goldText->SetText(to_string(gold).c_str());
 }
 
-void LevelTwoButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+void GameWindow::UpdateInterface()
 {
 
 }

@@ -7,24 +7,26 @@
 class GameWindow :
 	public Window
 {
+	// Показатель здоровья игрока
+	int health = 30;
+	// Показатель золота игрока
+	int gold = 100;
+
+	// Отображаемый на экране показатель текущего здоровья
+	Text* healthText = new Text(to_string(health).c_str());
+	// Отображаемый на экране показатель текущего золота
+	Text* goldText = new Text(to_string(gold).c_str());
 
 public:
-	// Текущее здоровье игрока
-	int Health = 30;
-	// Текущее золото игрока
-	int Gold = 100;
-
 	GameWindow();
 
-	// Загрузка пользовательского интерфейса игры
-	void LoadInterface();
+	// Возвращает показатель здоровья
+	int GetHealth();
+	// Задает показатель здоровья
+	void SetHealth(int Health);
+	// Возвращает показатель золота
+	int GetGold();
+	// Задает показатель золота
+	void SetGold(int Gold);
 
 };
-
-void GoldText_Update(Object* owner, Object* sender, Uint32 deltaTime);
-
-void HealthText_Update(Object* owner, Object* sender, Uint32 deltaTime);
-
-void LevelOneButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
-
-void LevelTwoButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
