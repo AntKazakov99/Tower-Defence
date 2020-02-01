@@ -17,6 +17,8 @@ class Text :
 	TTF_Font* font = TTF_OpenFont(fontFile.c_str(), fontSize);
 	// Цвет текста
 	SDL_Color foreground = { 0, 0, 0 };
+	// Максимальная длина строки в пикселях
+	int length = 0;
 
 	// Создание изображения из текста
 	void CreateSurface();
@@ -40,6 +42,10 @@ public:
 	SDL_Color GetForeground();
 	// Задает цвет текста
 	void SetForeground(SDL_Color foreground);
+	//
+	int GetLength();
+
+	void SetLength(int Length);
 
 	// Возвращает изображение на основе которого будет отображаться объект
 	VisualResource* GetVisualResource() override;

@@ -22,6 +22,8 @@ class VisualElement:
 	int zIndex = 0;
 	// Размер и расположение объекта
 	SDL_Rect* dstRect = NULL;
+	// Статус видимости объекта
+	bool isVisible = true;
 
 protected:
 	// Происходит перед каждым обновлением окна
@@ -88,6 +90,8 @@ public:
 	int GetTop();
 	// Задает расстояние между верхней границей элемента и границей окна
 	void SetTop(int top);
+	// Задает размер объекта
+	void SetSize(int width, int height);
 	// Возвращает ширину элемента
 	int GetWidth();
 	// Задает ширину элемента
@@ -100,5 +104,9 @@ public:
 	void SetZIndex(int zIndex);
 	// Возвращает порядок отображения элемента в плоскости Z
 	int GetZIndex();
+	// Возвращает состояние видимости элемента
+	bool GetIsVisible();
+	// Задает состояние видимости элемента
+	void SetIsVisible(bool IsVisible);
 
 };

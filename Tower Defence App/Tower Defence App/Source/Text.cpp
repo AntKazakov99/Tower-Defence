@@ -4,7 +4,14 @@ void Text::CreateSurface()
 {
 	if (font)
 	{
-		resource->SetSurface(TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground));
+		if (length != 0)
+		{
+			resource->SetSurface(TTF_RenderUTF8_Blended_Wrapped(font, this->text.c_str(), foreground, length));
+		}
+		else
+		{
+			resource->SetSurface(TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground));
+		}
 		if (resource->GetSurface())
 		{
 			SetWidth(resource->GetSurface()->w);
@@ -60,6 +67,16 @@ void Text::SetForeground(SDL_Color foreground)
 {
 	this->foreground = foreground;
 	CreateSurface();
+}
+
+int Text::GetLength()
+{
+	return length;
+}
+
+void Text::SetLength(int Length)
+{
+	length = Length;
 }
 
 SDL_Color Text::GetForeground()

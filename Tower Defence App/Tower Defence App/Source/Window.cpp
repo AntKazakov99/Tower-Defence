@@ -160,7 +160,10 @@ void Window::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
 	this->MouseMove(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseMotion(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseMotion(this, e);
+		}
 	}
 }
 
@@ -169,7 +172,10 @@ void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
 	this->MouseDown(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseButtonDown(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseButtonDown(this, e);
+		}
 	}
 }
 
@@ -178,9 +184,11 @@ void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
 	this->MouseUp(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseButtonUp(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseButtonUp(this, e);
+		}
 	}
-
 }
 
 void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
@@ -188,7 +196,10 @@ void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
 	this->MouseWheel(e);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseWheel(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseWheel(this, e);
+		}
 	}
 }
 
@@ -229,7 +240,7 @@ void Window::UpdateLayout()
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		if (vElements[i]->GetVisualResource())
+		if (vElements[i]->GetVisualResource() && vElements[i]->GetIsVisible())
 		{
 			if (vElements[i]->GetVisualResource()->GetIsUpdated())
 			{

@@ -112,6 +112,16 @@ int VisualElement::GetZIndex()
 	return zIndex;
 }
 
+bool VisualElement::GetIsVisible()
+{
+	return isVisible;
+}
+
+void VisualElement::SetIsVisible(bool IsVisible)
+{
+	isVisible = IsVisible;
+}
+
 SDL_Rect* VisualElement::GetDestinationRectangle()
 {
 	return dstRect;
@@ -164,6 +174,16 @@ void VisualElement::SetTop(int top)
 		dstRect = new SDL_Rect();
 	}
 	dstRect->y = top;
+}
+
+void VisualElement::SetSize(int width, int height)
+{
+	if (!dstRect)
+	{
+		dstRect = new SDL_Rect();
+	}
+	dstRect->w = width;
+	dstRect->h = height;
 }
 
 void VisualElement::SetLocation(int left, int top)
