@@ -77,6 +77,7 @@ int Text::GetLength()
 void Text::SetLength(int Length)
 {
 	length = Length;
+	CreateSurface();
 }
 
 SDL_Color Text::GetForeground()
