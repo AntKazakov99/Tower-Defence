@@ -80,6 +80,16 @@ GameWindow::GameWindow()
 	buildMageTower->SetClick(BuildMageTower_Click);
 	AddVisualElement(buildMageTower);
 
+	// Кнопка поломки башни
+	destroyTower->SetLocation(815, 300);
+	destroyTower->SetFontSize(14);
+	destroyTower->SetLength(194);
+	destroyTower->SetIsVisible(false);
+	destroyTower->SetClick(DestroyTowerButton_Click);
+	AddVisualElement(destroyTower);
+
+	//
+
 	// Кнопка загрузки первого уровня
 	Text* levelOneButton = new Text("Уровень 1");
 	levelOneButton->SetLocation(815, 500);
@@ -172,7 +182,7 @@ void GameWindow::LoadLevel(int Level)
 		{
 			for (int y = 0; y < 11; y++)
 			{
-				LoadTowerInfo(towers[x][y], levelMap[y][x], 0);
+				LoadTowerInfo(towers[x][y], levelMap[y][x]);
 			}
 		}
 	}
@@ -199,7 +209,7 @@ void GameWindow::LoadLevel(int Level)
 		{
 			for (int y = 0; y < 11; y++)
 			{
-				LoadTowerInfo(towers[x][y], levelMap[y][x], 0);
+				LoadTowerInfo(towers[x][y], levelMap[y][x]);
 			}
 		}
 	}
@@ -210,6 +220,7 @@ void GameWindow::UpdateInterface()
 	targetImage->SetIsVisible(false);
 	buildArchersTower->SetIsVisible(false);
 	buildMageTower->SetIsVisible(false);
+	destroyTower->SetIsVisible(false);
 	if (target)
 	{
 		targetImage->SetIsVisible(true);
@@ -231,24 +242,24 @@ void GameWindow::UpdateInterface()
 		case TowerType::ArcherTower:
 			targetTitle->SetText("Башня лучников");
 			targetDescription->SetText((
-				"Уровень: " + to_string(target->GetLevel()) + "\n" +
-				"Тип урона: Физ.\n" +
-				"Наносимый урон: " + to_string(target->GetDamage()) + "\n" +
+				"Тип урона: Физ.\nНаносимый урон: " + to_string(target->GetDamage()) + "\n" +
 				"Скорость атаки: " + to_string(target->GetAttackSpeed())).c_str());
+			destroyTower->SetIsVisible(true);
+			destroyTower->SetText("Сломать башню\n(Возврат 50)");
 			break;
 		case TowerType::MageTower:
 			targetTitle->SetText("Башня мага");
 			targetDescription->SetText((
-				"Уровень: " + to_string(target->GetLevel()) + "\n" +
-				"Тип урона: Маг.\n" + 
-				"Наносимый урон: " + to_string(target->GetDamage()) + "\n" + 
+				"Тип урона: Маг.\nНаносимый урон: " + to_string(target->GetDamage()) + "\n" + 
 				"Скорость атаки: " + to_string(target->GetAttackSpeed())).c_str());
+			destroyTower->SetIsVisible(true);
+			destroyTower->SetText("Сломать башню\n(Возврат 100)");
 			break;
 		}
 	}
 }
 
-void GameWindow::LoadTowerInfo(Tower* tower, TowerType type, int level)
+void GameWindow::LoadTowerInfo(Tower* tower, TowerType type)
 {
 	switch (type)
 	{
@@ -263,16 +274,14 @@ void GameWindow::LoadTowerInfo(Tower* tower, TowerType type, int level)
 	case TowerType::ArcherTower:
 		tower->SetType(TowerType::ArcherTower);
 		tower->SetVisualResource(archersTile);
-		tower->SetLevel(1);
 		tower->SetDamage(30);
-		tower->SetAttackSpeed(100);
+		tower->SetAttackSpeed(200);
 		break;
 	case TowerType::MageTower:
 		tower->SetType(TowerType::MageTower);
 		tower->SetVisualResource(magesTile);
-		tower->SetLevel(1);
 		tower->SetDamage(60);
-		tower->SetAttackSpeed(0);
+		tower->SetAttackSpeed(100);
 		break;
 	}
 }
@@ -291,7 +300,7 @@ void BuildArchersTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent
 	if (gWindow->GetGold() >= 100)
 	{
 		gWindow->SetGold(gWindow->GetGold() - 100);
-		gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::ArcherTower, 1);
+		gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::ArcherTower);
 		gWindow->UpdateInterface();
 	}
 }
@@ -302,9 +311,25 @@ void BuildMageTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
 	if (gWindow->GetGold() >= 200)
 	{
 		gWindow->SetGold(gWindow->GetGold() - 200);
-		gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::MageTower, 1);
+		gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::MageTower);
 		gWindow->UpdateInterface();
 	}
+}
+
+void DestroyTowerButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+{
+	GameWindow* gWindow = (GameWindow*)owner;
+	switch (gWindow->GetTarget()->GetType())
+	{
+	case TowerType::ArcherTower:
+		gWindow->SetGold(gWindow->GetGold() + 50);
+		break;
+	case TowerType::MageTower:
+		gWindow->SetGold(gWindow->GetGold() + 100);
+		break;
+	}
+	gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::None);
+	gWindow->UpdateInterface();
 }
 
 void LevelOneButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)

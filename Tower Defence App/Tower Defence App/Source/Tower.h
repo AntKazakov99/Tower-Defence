@@ -15,8 +15,6 @@ class Tower :
 {
 	// Тип башни
 	TowerType type = TowerType::None;
-	// Уровень башни
-	int level = 0;
 	// Урон наносимый башней
 	int damage = 0;
 	// Скорость атаки башни
@@ -27,10 +25,6 @@ public:
 	TowerType GetType();
 	// Задает тип объекта
 	void SetType(TowerType Type);
-	// Возвращает уровень башни
-	int GetLevel();
-	// Задает уровень башни
-	void SetLevel(int Level);
 	// Возвращает наносимый башней урон
 	int GetDamage();
 	// Задает наносимый башней урон

@@ -13,9 +13,7 @@ class GameWindow :
 	// Показатель золота игрока
 	int gold = 100;
 	// Выделенный объект
-	Tower* target;
-	// Список башен
-	Tower* towers[16][11];
+	Tower* target = nullptr;
 
 	// Изображение тайла травы
 	VisualResource* grassTile = new VisualResource(IMG_Load(".\\Resources\\grass.png"));
@@ -25,9 +23,9 @@ class GameWindow :
 	VisualResource* archersTile = new VisualResource(IMG_Load(".\\Resources\\archers.png"));
 	// Изображение тайла башни магов
 	VisualResource* magesTile = new VisualResource(IMG_Load(".\\Resources\\mages.png"));
-	// Выделение объекта
-	VisualResource* targetTile = new VisualResource(IMG_Load(".\\Resources\\target.png"));
 
+	// Список башен
+	Tower* towers[16][11];
 	// Изображение для выделения объекта
 	Image* selectTargetImage = new Image();
 	// Отображаемый на экране показатель текущего здоровья
@@ -44,7 +42,9 @@ class GameWindow :
 	Text* buildArchersTower = new Text("Построить башню лучников\n(Стоимость: 100)");
 	// Кнопка постройки башни мага
 	Text* buildMageTower = new Text("Построить башню мага\n(Стоимость: 200)");
-
+	// Кнопка поломки башни
+	Text* destroyTower = new Text();
+	
 public:
 	GameWindow();
 
@@ -67,16 +67,21 @@ public:
 	// Обновление интерфейса в соответствии с выделенным объектом
 	void UpdateInterface();
 	// Загрузка информации о башне
-	void LoadTowerInfo(Tower* tower, TowerType type, int level);
+	void LoadTowerInfo(Tower* tower, TowerType type);
 
 };
 
 // Нажатие на объект на карте
 void Tower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
 
+// Нажатие на кнопку постройки башни
 void BuildArchersTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
 
+// Нажатие на кнопку постройки башни
 void BuildMageTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
+
+// Нажатие на кнопку загрузки второго уровня
+void DestroyTowerButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
 
 // Нажатие на кнопку загрузки первого уровня
 void LevelOneButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);

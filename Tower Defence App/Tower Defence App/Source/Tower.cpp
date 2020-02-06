@@ -10,16 +10,6 @@ void Tower::SetType(TowerType Type)
 	type = Type;
 }
 
-int Tower::GetLevel()
-{
-	return level;
-}
-
-void Tower::SetLevel(int Level)
-{
-	level = Level;
-}
-
 int Tower::GetDamage()
 {
 	return damage;
