@@ -6,25 +6,13 @@ GameWindow::GameWindow()
 	Initialize();
 	SetKeyDown(GameWindow_KeyDown);
 
-	// Создает объекты башен
-	for (int x = 0; x < 16; x++)
-	{
-		for (int y = 0; y < 11; y++)
-		{
-			towers[x][y] = new Tower();
-			towers[x][y]->SetLocation(50 * x, 50 * y);
-			towers[x][y]->SetSize(50, 50);
-			AddVisualElement(towers[x][y]);
-			towers[x][y]->SetClick(Tower_Click);
-		}
-	}
-
 	Image* interface = new Image();
 	interface->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\interface.png")));
 	AddVisualElement(interface);
 
 	selectTargetImage->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\target.png")));
 	selectTargetImage->SetSize(50, 50);
+	selectTargetImage->SetZIndex(100);
 	selectTargetImage->SetIsVisible(false);
 	AddVisualElement(selectTargetImage);
 
@@ -151,6 +139,19 @@ void GameWindow::SetTarget(Tower* Target)
 
 void GameWindow::LoadLevel(int Level)
 {
+	// Создает объекты башен
+	for (int x = 0; x < 16; x++)
+	{
+		for (int y = 0; y < 11; y++)
+		{
+			towers[x][y] = new Tower();
+			towers[x][y]->SetLocation(50 * x, 50 * y);
+			towers[x][y]->SetSize(50, 50);
+			AddVisualElement(towers[x][y]);
+			towers[x][y]->SetClick(Tower_Click);
+		}
+	}
+
 	SetTarget(NULL);
 	if (Level == 1)
 	{
@@ -211,6 +212,8 @@ void GameWindow::LoadLevel(int Level)
 void GameWindow::UpdateInterface()
 {
 	targetImage->SetIsVisible(false);
+	targetTitle->SetIsVisible(false);
+	targetDescription->SetIsVisible(false);
 	buildArchersTower->SetIsVisible(false);
 	buildMageTower->SetIsVisible(false);
 	destroyTower->SetIsVisible(false);
@@ -218,18 +221,18 @@ void GameWindow::UpdateInterface()
 	{
 		targetImage->SetIsVisible(true);
 		targetImage->SetVisualResource(target->GetVisualResource());
+		targetTitle->SetIsVisible(true);
+		targetDescription->SetIsVisible(true);
 		switch (target->GetType())
 		{
 		case TowerType::None:
 			targetTitle->SetText("Земля");
-			targetDescription->SetIsVisible(true);
 			targetDescription->SetText("Пустой участок земли, пригодный для строительства");
 			buildArchersTower->SetIsVisible(true);
 			buildMageTower->SetIsVisible(true);
 			break;
 		case TowerType::Road:
 			targetTitle->SetText("Дорога");
-			targetDescription->SetIsVisible(true);
 			targetDescription->SetText("Отрезок дороги, не предназначен для строительства");
 			break;
 		case TowerType::ArcherTower:
