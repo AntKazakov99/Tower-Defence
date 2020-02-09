@@ -27,24 +27,24 @@ class VisualElement:
 
 protected:
 	// Происходит перед каждым обновлением окна
-	function<void(Object*, Object*, Uint32)> Update = [](Object*, Object*, Uint32) { /*empty*/ };
+	function<void(Object*, Object*, Uint32)> Tick = nullptr;
 	// Происходит при клике по объекту
-	function<void(Object*, Object*, SDL_MouseButtonEvent)> Click = [](Object*, Object*, SDL_MouseButtonEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseButtonEvent)> Click = nullptr;
 	// Происходит, когда указатель мыши попадает внутрь границ элемента
-	function<void(Object*, Object*, SDL_MouseMotionEvent)> MouseEnter = [](Object*, Object*, SDL_MouseMotionEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseMotionEvent)> MouseEnter = nullptr;
 	// Происходит, когда указатель мыши покидает границы данного элемента
-	function<void(Object*, Object*, SDL_MouseMotionEvent)> MouseLeave = [](Object*, Object*, SDL_MouseMotionEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseMotionEvent)> MouseLeave = nullptr;
 	// Происходит при перемещении указателя мыши над данным элементом
-	function<void(Object*, Object*, SDL_MouseMotionEvent)> MouseMove = [](Object*, Object*, SDL_MouseMotionEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseMotionEvent)> MouseMove = nullptr;
 	// Происходит при нажатии любой кнопки мыши над данным элементом
-	function<void(Object*, Object*, SDL_MouseButtonEvent)> MouseDown = [](Object*, Object*, SDL_MouseButtonEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseButtonEvent)> MouseDown = nullptr;
 	// Происходит при отпускании любой кнопки мыши над данным элементом
-	function<void(Object*, Object*, SDL_MouseButtonEvent)> MouseUp = [](Object*, Object*, SDL_MouseButtonEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseButtonEvent)> MouseUp = nullptr;
 	// Происходит при вращении колесика мыши над данным элементом
-	function<void(Object*, Object*, SDL_MouseWheelEvent)> MouseWheel = [](Object*, Object*, SDL_MouseWheelEvent) { /*empty*/ };
+	function<void(Object*, Object*, SDL_MouseWheelEvent)> MouseWheel = nullptr;
 
 public:
-	void InvokeEventUpdate(Object* owner, Uint32 deltaTime);
+	void InvokeEventTick(Object* owner, Uint32 deltaTime);
 	// Обработка SDL_MOUSEMOTION
 	void InvokeEventMouseMotion(Object* owner, SDL_MouseMotionEvent e);
 	// Обработка SDL_MOUSEBUTTONDOWN
@@ -55,7 +55,7 @@ public:
 	void InvokeEventMouseWheel(Object* owner, SDL_MouseWheelEvent e);
 
 	// Задает метод для обработки события Update
-	void SetUpdate(void Update(Object* , Object*, Uint32));
+	void SetTick(void Tick(Object* , Object*, Uint32));
 	// Задает метод для обработки события Click
 	void SetClick(void Click(Object*, Object*, SDL_MouseButtonEvent));
 	// Задает метод для обработки события MouseEnter

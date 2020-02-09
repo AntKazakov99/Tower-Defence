@@ -1,8 +1,11 @@
 #include "VisualElement.h"
 
-void VisualElement::InvokeEventUpdate(Object* owner, Uint32 deltaTime)
+void VisualElement::InvokeEventTick(Object* owner, Uint32 deltaTime)
 {
-	Update(owner, this, deltaTime);
+	if (Tick)
+	{
+		Tick(owner, this, deltaTime);
+	}
 }
 
 void VisualElement::InvokeEventMouseMotion(Object* owner, SDL_MouseMotionEvent e)
@@ -16,16 +19,25 @@ void VisualElement::InvokeEventMouseMotion(Object* owner, SDL_MouseMotionEvent e
 			if (!isMouseOver)
 			{
 				isMouseOver = true;
-				MouseEnter(owner, this, e);
+				if (MouseEnter)
+				{
+					MouseEnter(owner, this, e);
+				}
 			}
-			MouseMove(owner, this, e);
+			if (MouseMove)
+			{
+				MouseMove(owner, this, e);
+			}
 		}
 		else
 		{
 			if (isMouseOver)
 			{
 				isMouseOver = false;
-				MouseLeave(owner, this, e);
+				if (MouseLeave)
+				{
+					MouseLeave(owner, this, e);
+				}
 			}
 			isPressed = false;
 		}
@@ -36,7 +48,10 @@ void VisualElement::InvokeEventMouseButtonDown(Object* owner, SDL_MouseButtonEve
 {
 	if (isMouseOver)
 	{
-		MouseDown(owner, this, e);
+		if (MouseDown)
+		{
+			MouseDown(owner, this, e);
+		}
 		isPressed = true;
 	}
 }
@@ -45,10 +60,16 @@ void VisualElement::InvokeEventMouseButtonUp(Object* owner, SDL_MouseButtonEvent
 {
 	if (isMouseOver)
 	{
-		MouseUp(owner, this, e);
+		if (MouseUp)
+		{
+			MouseUp(owner, this, e);
+		}
 		if (isPressed)
 		{
-			Click(owner, this, e);
+			if (Click)
+			{
+				Click(owner, this, e);
+			}
 		}
 	}
 	isPressed = false;
@@ -58,13 +79,16 @@ void VisualElement::InvokeEventMouseWheel(Object* owner, SDL_MouseWheelEvent e)
 {
 	if (isMouseOver)
 	{
-		MouseWheel(owner, this, e);
+		if (MouseWheel)
+		{
+			MouseWheel(owner, this, e);
+		}
 	}
 }
 
-void VisualElement::SetUpdate(void Update(Object*, Object*, Uint32))
+void VisualElement::SetTick(void Tick(Object*, Object*, Uint32))
 {
-	this->Update = Update;
+	this->Tick = Tick;
 }
 
 void VisualElement::SetClick(void Click(Object*, Object*, SDL_MouseButtonEvent))

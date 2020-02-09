@@ -4,6 +4,7 @@ GameWindow::GameWindow()
 {
 	SetTitle("Tower Defence ver.0.0.1");
 	Initialize();
+	SetKeyDown(GameWindow_KeyDown);
 
 	// Создает объекты башен
 	for (int x = 0; x < 16; x++)
@@ -104,14 +105,6 @@ GameWindow::GameWindow()
 	levelTwoButton->SetClick(LevelTwoButton_Click);
 	AddVisualElement(levelTwoButton);
 
-}
-
-void GameWindow::KeyDown(SDL_KeyboardEvent e)
-{
-	if (e.keysym.sym == SDLK_ESCAPE)
-	{
-		SetTarget(NULL);
-	}
 }
 
 int GameWindow::GetHealth()
@@ -283,6 +276,15 @@ void GameWindow::LoadTowerInfo(Tower* tower, TowerType type)
 		tower->SetDamage(60);
 		tower->SetAttackSpeed(100);
 		break;
+	}
+}
+
+void GameWindow_KeyDown(Object* owner, SDL_KeyboardEvent e)
+{
+	GameWindow* window = (GameWindow*)owner;
+	if (e.keysym.sym == SDLK_ESCAPE)
+	{
+		window->SetTarget(NULL);
 	}
 }
 

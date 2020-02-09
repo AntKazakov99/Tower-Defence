@@ -48,8 +48,6 @@ class GameWindow :
 public:
 	GameWindow();
 
-	void KeyDown(SDL_KeyboardEvent e) override;
-
 	// Возвращает показатель здоровья
 	int GetHealth();
 	// Задает показатель здоровья
@@ -70,6 +68,9 @@ public:
 	void LoadTowerInfo(Tower* tower, TowerType type);
 
 };
+
+// Обработка нажатия клавиши в окне
+void GameWindow_KeyDown(Object* owner, SDL_KeyboardEvent e);
 
 // Нажатие на объект на карте
 void Tower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
