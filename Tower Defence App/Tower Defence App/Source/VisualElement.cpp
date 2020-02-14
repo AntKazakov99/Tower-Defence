@@ -1,13 +1,5 @@
 #include "VisualElement.h"
 
-void VisualElement::InvokeEventTick(Object* owner, Uint32 deltaTime)
-{
-	if (Tick)
-	{
-		Tick(owner, this, deltaTime);
-	}
-}
-
 void VisualElement::InvokeEventMouseMotion(Object* owner, SDL_MouseMotionEvent e)
 {
 	SDL_Rect* dstRect = GetDestinationRectangle();
@@ -84,11 +76,6 @@ void VisualElement::InvokeEventMouseWheel(Object* owner, SDL_MouseWheelEvent e)
 			MouseWheel(owner, this, e);
 		}
 	}
-}
-
-void VisualElement::SetTick(void Tick(Object*, Object*, Uint32))
-{
-	this->Tick = Tick;
 }
 
 void VisualElement::SetClick(void Click(Object*, Object*, SDL_MouseButtonEvent))

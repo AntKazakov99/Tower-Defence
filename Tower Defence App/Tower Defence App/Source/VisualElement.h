@@ -26,8 +26,6 @@ class VisualElement:
 	bool isVisible = true;
 
 protected:
-	// Происходит перед каждым обновлением окна
-	function<void(Object*, Object*, Uint32)> Tick = nullptr;
 	// Происходит при клике по объекту
 	function<void(Object*, Object*, SDL_MouseButtonEvent)> Click = nullptr;
 	// Происходит, когда указатель мыши попадает внутрь границ элемента
@@ -44,7 +42,6 @@ protected:
 	function<void(Object*, Object*, SDL_MouseWheelEvent)> MouseWheel = nullptr;
 
 public:
-	void InvokeEventTick(Object* owner, Uint32 deltaTime);
 	// Обработка SDL_MOUSEMOTION
 	void InvokeEventMouseMotion(Object* owner, SDL_MouseMotionEvent e);
 	// Обработка SDL_MOUSEBUTTONDOWN
@@ -54,8 +51,6 @@ public:
 	// Обработка SDL_MOUSEWHEEL
 	void InvokeEventMouseWheel(Object* owner, SDL_MouseWheelEvent e);
 
-	// Задает метод для обработки события Update
-	void SetTick(void Tick(Object* , Object*, Uint32));
 	// Задает метод для обработки события Click
 	void SetClick(void Click(Object*, Object*, SDL_MouseButtonEvent));
 	// Задает метод для обработки события MouseEnter
