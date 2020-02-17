@@ -11,6 +11,7 @@ GameWindow::GameWindow()
 	AddVisualElement(interface);
 
 	selectTargetImage->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\target.png")));
+	selectTargetImage->SetZIndex(100);
 	selectTargetImage->SetSize(50, 50);
 	selectTargetImage->SetZIndex(100);
 	selectTargetImage->SetIsVisible(false);
@@ -144,11 +145,14 @@ void GameWindow::LoadLevel(int Level)
 	{
 		for (int y = 0; y < 11; y++)
 		{
-			towers[x][y] = new Tower();
-			towers[x][y]->SetLocation(50 * x, 50 * y);
-			towers[x][y]->SetSize(50, 50);
-			AddVisualElement(towers[x][y]);
-			towers[x][y]->SetClick(Tower_Click);
+			if (!towers[x][y])
+			{
+				towers[x][y] = new Tower();
+				towers[x][y]->SetLocation(50 * x, 50 * y);
+				towers[x][y]->SetSize(50, 50);
+				AddVisualElement(towers[x][y]);
+				towers[x][y]->SetClick(Tower_Click);
+			}
 		}
 	}
 
@@ -252,6 +256,12 @@ void GameWindow::UpdateInterface()
 			destroyTower->SetText("Сломать башню\n(Возврат 100)");
 			break;
 		}
+	}
+	else
+	{
+		targetImage->SetIsVisible(false);
+		targetTitle->SetIsVisible(false);
+		targetDescription->SetIsVisible(false);
 	}
 }
 

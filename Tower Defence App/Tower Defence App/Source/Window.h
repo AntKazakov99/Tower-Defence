@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "VisualElement.h"
+#include "Timer.h"
 #include "Object.h"
 
 using namespace std;
@@ -34,6 +35,8 @@ class Window:
 	SDL_Renderer* renderer = NULL;
 	// Список отображаемых элементов
 	vector<VisualElement*> vElements;
+	// Список таймеров
+	vector<Timer*> timers;
 	// Идентификатор окна
 	int id = 0;
 	// Заголовок окна
@@ -48,8 +51,6 @@ class Window:
 	WindowState windowState = WindowState::Restored;
 	// Статус работы вертикальной синхронизации
 	bool vSync = false;
-	// Время последнего обновления окна
-	int lastTick = SDL_GetTicks();
 
 protected:
 	// Происходит при каждом обновлении окна
@@ -88,6 +89,7 @@ protected:
 public:
 	~Window();
 
+	void InvokeEventTick(Uint32 deltaTime);
 	// Обработка события SDL_WINDOWEVENT_MOVED
 	void InvokeWindowEventMoved(SDL_WindowEvent e);
 	// Обработка события SDL_WINDOWEVENT_SIZE_CHANGED
@@ -190,6 +192,9 @@ public:
 	void AddVisualElement(VisualElement* vElement);
 	// Удаляет элемент из списка отображаемых объектов
 	void RemoveVisualElement(VisualElement* vElement);
+	// Добавляет новый таймер в список обрабатываемых таймеров
+	void AddTimer(Timer* timer);
+	// Удаляет таймер из списка обрабатываемых таймеров
+	void RemoveTimer(Timer* timer);
 
 };
-

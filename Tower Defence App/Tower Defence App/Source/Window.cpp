@@ -6,6 +6,18 @@ Window::~Window()
 	SDL_DestroyRenderer(renderer);
 }
 
+void Window::InvokeEventTick(Uint32 deltaTime)
+{
+	if (Tick)
+	{
+		Tick(this, deltaTime);
+	}
+	for (int i = 0; i < timers.size(); i++)
+	{
+		timers[i]->InvokeEventTick(this, deltaTime);
+	}
+}
+
 void Window::InvokeWindowEventMoved(SDL_WindowEvent e)
 {
 	if (LocationChanged)
@@ -280,17 +292,6 @@ void Window::Initialize()
 
 void Window::UpdateLayout()
 {
-	int tick = SDL_GetTicks();
-	if (Tick)
-	{
-		Tick(this, tick - lastTick);
-	}
-	for (int i = 0; i < vElements.size(); i++)
-	{
-		vElements[i]->InvokeEventTick(this, tick - lastTick);
-	}
-	lastTick = tick;
-
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{
@@ -429,6 +430,33 @@ void Window::RemoveVisualElement(VisualElement* vElement)
 		if (vElements[i]  == vElement)
 		{
 			vElements.erase(vElements.begin() + i--);
+		}
+	}
+}
+
+void Window::AddTimer(Timer* timer)
+{
+	bool inserted = false;
+	for (int i = 0; i < timers.size(); i++)
+	{
+		if (timers[i] == timer)
+		{
+			inserted = true;
+		}
+	}
+	if (!inserted)
+	{
+		timers.push_back(timer);
+	}
+}
+
+void Window::RemoveTimer(Timer* timer)
+{
+	for (int i = 0; i < timers.size(); i++)
+	{
+		if (timers[i] == timer)
+		{
+			timers.erase(timers.begin() + i--);
 		}
 	}
 }

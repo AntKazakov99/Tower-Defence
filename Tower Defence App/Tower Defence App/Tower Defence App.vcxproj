@@ -25,6 +25,7 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Object.cpp" />
     <ClCompile Include="Source\Text.cpp" />
+    <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Tower.cpp" />
     <ClCompile Include="Source\VisualElement.cpp" />
     <ClCompile Include="Source\VisualResource.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="Source\Image.h" />
     <ClInclude Include="Source\Object.h" />
     <ClInclude Include="Source\Text.h" />
+    <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Tower.h" />
     <ClInclude Include="Source\VisualElement.h" />
     <ClInclude Include="Source\VisualResource.h" />

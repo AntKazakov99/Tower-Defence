@@ -51,6 +51,9 @@
     <ClCompile Include="Source\Tower.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Исходные файлы\Приложение</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Source\Tower.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Файлы заголовков\Приложение</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
