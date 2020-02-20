@@ -28,4 +28,5 @@ int Tower::GetAttackSpeed()
 void Tower::SetAttackSpeed(int AttackSpeed)
 {
 	attackSpeed = AttackSpeed;
+	SetInterval(2000 / (attackSpeed / 100));
 }

@@ -33,8 +33,11 @@ Text::Text(const char* text):
 
 void Text::SetText(const char* text)
 {
-	this->text = text;
-	CreateSurface();
+	if (this->text != text)
+	{
+		this->text = text;
+		CreateSurface();
+	}
 }
 
 const char* Text::GetText()

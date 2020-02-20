@@ -27,7 +27,8 @@ enum WindowState
 
 // Позволяет создавать, настраивать и отображать содержимое окна
 class Window:
-	public Object
+	public Object,
+	public Timer
 {
 	// SDL реализация окна
 	SDL_Window* window = NULL;
@@ -51,10 +52,12 @@ class Window:
 	WindowState windowState = WindowState::Restored;
 	// Статус работы вертикальной синхронизации
 	bool vSync = false;
+	// Время последнего обновления окна
+	Uint32 lastTick = 0;
 
 protected:
 	// Происходит при каждом обновлении окна
-	function<void(Object*, Uint32 deltaTime)> Tick = nullptr;
+	function<void(Object*, Uint32 deltaTime)> Update = nullptr;
 	// Происходит при изменении расположения окна
 	function<void(Object*, SDL_WindowEvent e)> LocationChanged = nullptr;
 	// Происходит при изменении размеров окна
@@ -89,7 +92,6 @@ protected:
 public:
 	~Window();
 
-	void InvokeEventTick(Uint32 deltaTime);
 	// Обработка события SDL_WINDOWEVENT_MOVED
 	void InvokeWindowEventMoved(SDL_WindowEvent e);
 	// Обработка события SDL_WINDOWEVENT_SIZE_CHANGED
@@ -125,8 +127,8 @@ public:
 	// Обработка SDL_MOUSEWHEEL
 	void InvokeEventMouseWheel(SDL_MouseWheelEvent e);
 
-	// Задает метод для обработки события Tick
-	void SetTick(void Tick(Object* sender, Uint32 deltaTime));
+	// Задает метод для обработки события Update
+	void SetUpdate(void Update(Object* sender, Uint32 deltaTime));
 	// Задает метод для обработки события LocationChanged
 	void SetLocationChanged(void LocationChanged(Object* sender, SDL_WindowEvent e));
 	// Задает метод для обработки события SizeChanged

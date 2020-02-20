@@ -7,11 +7,12 @@
 class GameWindow :
 	public Window
 {
-
+	// Номер текущей волны
+	int wave = 0;
 	// Показатель здоровья игрока
-	int health = 30;
+	int health = 0;
 	// Показатель золота игрока
-	int gold = 100;
+	int gold = 0;
 	// Выделенный объект
 	Tower* target = nullptr;
 
@@ -28,10 +29,14 @@ class GameWindow :
 	Tower* towers[16][11];
 	// Изображение для выделения объекта
 	Image* selectTargetImage = new Image();
+	// Отображаемый номер текущей волны
+	Text* waveText = new Text();
+	// Отображаемое время с начала текущей волны
+	Text* waveTimeText = new Text();
 	// Отображаемый на экране показатель текущего здоровья
-	Text* healthText = new Text(to_string(health).c_str());
+	Text* healthText = new Text();
 	// Отображаемый на экране показатель текущего золота
-	Text* goldText = new Text(to_string(gold).c_str());
+	Text* goldText = new Text();
 	// Изображение выделенного объекта
 	Image* targetImage = new Image();
 	// Название выделенного элемента
@@ -48,6 +53,14 @@ class GameWindow :
 public:
 	GameWindow();
 
+	// Возвращает общее количество волн на уровне
+	int GetWavesCount();
+	// Возвращает номер текущей волны противников
+	int GetWave();
+	// Задает номер текущей волны противников
+	void SetWave(int Wave);
+	// Обновление значение WaveTimeText
+	void UpdateWaveTimeText();
 	// Возвращает показатель здоровья
 	int GetHealth();
 	// Задает показатель здоровья
@@ -89,3 +102,12 @@ void LevelOneButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
 
 // Нажатие на кнопку загрузки второго уровня
 void LevelTwoButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e);
+
+// Срабатывание таймера окна
+void GameWindowTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime);
+
+// Срабатывание таймера башни
+void TowerTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime);
+
+// Обновление окна
+void GameWindow_Update(Object* sender, Uint32 deltaTime);

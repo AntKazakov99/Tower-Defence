@@ -257,13 +257,10 @@ void Application::Run()
 	while (running)
 	{
 		EventHandling();
-		int tick = SDL_GetTicks();
 		for (int i = 0; i < windows.size(); i++)
 		{
-			windows[i]->InvokeEventTick(tick - lastTick);
 			windows[i]->UpdateLayout();
 		}
-		lastTick = tick;
 	}
 }
 

@@ -24,7 +24,7 @@ void Timer::InvokeEventTick(Object* owner, Uint32 deltaTime)
 	}
 }
 
-void Timer::SetTick(void Tick(Object*, Object*, Uint32))
+void Timer::SetTick(void Tick(Object*, Timer*, Uint32))
 {
 	this->Tick = Tick;
 }
@@ -47,6 +47,16 @@ void Timer::Stop()
 	pauseTime = 0;
 	isEnabled = false;
 	isPaused = false;
+}
+
+bool Timer::GetIsEnabled()
+{
+	return isEnabled;
+}
+
+bool Timer::GetIsPaused()
+{
+	return isPaused;
 }
 
 Uint32 Timer::GetEnableTime()

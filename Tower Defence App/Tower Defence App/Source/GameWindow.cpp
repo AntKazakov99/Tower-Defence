@@ -5,11 +5,16 @@ GameWindow::GameWindow()
 	SetTitle("Tower Defence ver.0.0.1");
 	Initialize();
 	SetKeyDown(GameWindow_KeyDown);
+	SetTick(GameWindowTimer_Tick);
+	SetUpdate(GameWindow_Update);
+	SetInterval(5000);
 
+	// Интерфейс боковой панели игры
 	Image* interface = new Image();
 	interface->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\interface.png")));
 	AddVisualElement(interface);
 
+	// Рамка для выделения объекта
 	selectTargetImage->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\target.png")));
 	selectTargetImage->SetZIndex(100);
 	selectTargetImage->SetSize(50, 50);
@@ -17,40 +22,38 @@ GameWindow::GameWindow()
 	selectTargetImage->SetIsVisible(false);
 	AddVisualElement(selectTargetImage);
 
-	// Добавляет текст "Текущее здоровье:" на экран
-	Text* currentHealthText = new Text("Текущее здоровье: ");
-	currentHealthText->SetLocation(815, 11);
-	currentHealthText->SetForeground({ 255, 255, 255 });
-	AddVisualElement(currentHealthText);
+	// Выводит номер текущей волны врагов на экран
+	waveText->SetLocation(815, 11 + 15 * 0);
+	waveText->SetForeground({ 255, 255, 255 });
+	AddVisualElement(waveText);
+
+	// Выводит номер текущей волны врагов на экран
+	waveTimeText->SetLocation(815, 11 + 15 * 1);
+	waveTimeText->SetForeground({ 255, 255, 255 });
+	AddVisualElement(waveTimeText);
 
 	// Выводит показатель здоровья игрока на экран
-	healthText->SetLocation(815 + currentHealthText->GetWidth(), 11);
-	healthText->SetForeground({ 220, 0, 0 });
+	healthText->SetLocation(815, 11 + 15 * 2);
+	healthText->SetForeground({ 255, 255, 255 });
 	AddVisualElement(healthText);
 
-	// Добавляет текст "Текущее золото:" на экран
-	Text* currentGoldText = new Text("Текущее золото: ");
-	currentGoldText->SetLocation(815, 26);
-	currentGoldText->SetForeground({ 255, 255, 255 });
-	AddVisualElement(currentGoldText);
-
 	// Выводит показатель золота игрока на экран
-	goldText->SetLocation(815 + currentGoldText->GetWidth(), 26);
-	goldText->SetForeground({ 220, 220, 0 });
+	goldText->SetLocation(815, 11 + 15 * 3);
+	goldText->SetForeground({ 255, 255, 255 });
 	AddVisualElement(goldText);
 
 	// Изображение выделенного элемента
-	targetImage->SetLocation(865, 50);
+	targetImage->SetLocation(865, 80);
 	targetImage->SetSize(100, 100);
 	AddVisualElement(targetImage);
 
 	// Название выделенного элемента
-	targetTitle->SetLocation(815, 150);
+	targetTitle->SetLocation(815, 180);
 	targetTitle->SetFontSize(14);
 	AddVisualElement(targetTitle);
 
-	// Название выделенного элемента
-	targetDescription->SetLocation(815, 167);
+	// Описание выделенного элемента
+	targetDescription->SetLocation(815, 197);
 	targetDescription->SetLength(194);
 	AddVisualElement(targetDescription);
 
@@ -78,8 +81,6 @@ GameWindow::GameWindow()
 	destroyTower->SetClick(DestroyTowerButton_Click);
 	AddVisualElement(destroyTower);
 
-	//
-
 	// Кнопка загрузки первого уровня
 	Text* levelOneButton = new Text("Уровень 1");
 	levelOneButton->SetLocation(815, 500);
@@ -96,6 +97,34 @@ GameWindow::GameWindow()
 
 }
 
+int GameWindow::GetWavesCount()
+{
+	return 5;
+}
+
+int GameWindow::GetWave()
+{
+	return wave;
+}
+
+void GameWindow::SetWave(int Wave)
+{
+	wave = Wave;
+	waveText->SetText(("Волна " + to_string(wave) + " из " + to_string(GetWavesCount())).c_str());
+}
+
+void GameWindow::UpdateWaveTimeText()
+{
+	if (GetIsEnabled())
+	{
+		waveTimeText->SetText(
+			((GetEnableTime() / 60000 < 10 ? "0" : "") + to_string(GetEnableTime() / 60000) + ":" +
+			(GetEnableTime() % 60000 / 1000  < 10 ? "0" : "") + to_string(GetEnableTime() % 60000 / 1000) + " из " +
+			(GetInterval() / 60000 < 10 ? "0" : "") + to_string(GetInterval() / 60000) + ":" +
+			((GetInterval() % 60000) / 1000 < 10 ? "0" : "") + to_string((GetInterval() % 60000) / 1000)).c_str());
+	}
+}
+
 int GameWindow::GetHealth()
 {
 	return health;
@@ -104,7 +133,7 @@ int GameWindow::GetHealth()
 void GameWindow::SetHealth(int Health)
 {
 	health = Health;
-	healthText->SetText(to_string(health).c_str());
+	healthText->SetText(("Текущее здоровье: " + to_string(health)).c_str());
 }
 
 int GameWindow::GetGold()
@@ -115,7 +144,7 @@ int GameWindow::GetGold()
 void GameWindow::SetGold(int Gold)
 {
 	gold = Gold;
-	goldText->SetText(to_string(gold).c_str());
+	goldText->SetText(("Текущее золото: " + to_string(gold)).c_str());
 }
 
 Tower* GameWindow::GetTarget()
@@ -151,16 +180,19 @@ void GameWindow::LoadLevel(int Level)
 				towers[x][y]->SetLocation(50 * x, 50 * y);
 				towers[x][y]->SetSize(50, 50);
 				AddVisualElement(towers[x][y]);
+				AddTimer(towers[x][y]);
 				towers[x][y]->SetClick(Tower_Click);
+				towers[x][y]->SetTick(TowerTimer_Tick);
 			}
 		}
 	}
-
+	Stop();
 	SetTarget(NULL);
 	if (Level == 1)
 	{
 		SetGold(100);
 		SetHealth(30);
+
 		// Добавить загрузку уровня
 		TowerType levelMap[11][16] =
 		{
@@ -211,6 +243,8 @@ void GameWindow::LoadLevel(int Level)
 			}
 		}
 	}
+	SetWave(1);
+	Start();
 }
 
 void GameWindow::UpdateInterface()
@@ -267,6 +301,7 @@ void GameWindow::UpdateInterface()
 
 void GameWindow::LoadTowerInfo(Tower* tower, TowerType type)
 {
+	tower->Stop();
 	switch (type)
 	{
 	case TowerType::None:
@@ -282,12 +317,14 @@ void GameWindow::LoadTowerInfo(Tower* tower, TowerType type)
 		tower->SetVisualResource(archersTile);
 		tower->SetDamage(30);
 		tower->SetAttackSpeed(200);
+		tower->Start();
 		break;
 	case TowerType::MageTower:
 		tower->SetType(TowerType::MageTower);
 		tower->SetVisualResource(magesTile);
 		tower->SetDamage(60);
 		tower->SetAttackSpeed(100);
+		tower->Start();
 		break;
 	}
 }
@@ -357,4 +394,42 @@ void LevelTwoButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
 {
 	GameWindow* gWindow = (GameWindow*)owner;
 	gWindow->LoadLevel(2);
+}
+
+void GameWindowTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
+{
+	GameWindow* window = (GameWindow*)owner;
+	// Волны / победа
+	if (window->GetWavesCount() > window->GetWave())
+	{
+		window->SetWave(window->GetWave() + 1);
+	}
+	else
+	{
+		window->Stop();
+		cout << "Victory!!!!!!";
+	}
+}
+
+void TowerTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
+{
+	GameWindow* window = (GameWindow*)owner;
+	Tower* tower = (Tower*)sender;
+	if (window->GetIsEnabled())
+	{
+		if (tower->GetType() == TowerType::MageTower)
+		{
+			cout << "Mage tower shoot" << endl;
+		}
+		else
+		{
+			cout << "Archers tower shoot" << endl;
+		}
+	}
+}
+
+void GameWindow_Update(Object* owner, Uint32 deltaTime)
+{
+	GameWindow* window = (GameWindow*)owner;
+	window->UpdateWaveTimeText();
 }

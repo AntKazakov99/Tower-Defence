@@ -1,5 +1,6 @@
 #pragma once
 #include "Image.h"
+#include "Timer.h"
 
 enum class TowerType
 {
@@ -11,7 +12,8 @@ enum class TowerType
 
 // Тип объекта
 class Tower :
-	public Image
+	public Image,
+	public Timer
 {
 	// Тип башни
 	TowerType type = TowerType::None;

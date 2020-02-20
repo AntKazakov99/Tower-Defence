@@ -8,8 +8,6 @@ class Application
 	std::vector<Window*> windows;
 	// Статус работы приложения
 	bool running = true;
-	// Время последнего обновления окна
-	int lastTick = SDL_GetTicks();
 
 	// Обработка событий
 	void EventHandling();

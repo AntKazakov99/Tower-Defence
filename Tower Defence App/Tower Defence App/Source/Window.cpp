@@ -6,18 +6,6 @@ Window::~Window()
 	SDL_DestroyRenderer(renderer);
 }
 
-void Window::InvokeEventTick(Uint32 deltaTime)
-{
-	if (Tick)
-	{
-		Tick(this, deltaTime);
-	}
-	for (int i = 0; i < timers.size(); i++)
-	{
-		timers[i]->InvokeEventTick(this, deltaTime);
-	}
-}
-
 void Window::InvokeWindowEventMoved(SDL_WindowEvent e)
 {
 	if (LocationChanged)
@@ -186,9 +174,9 @@ void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
 	}
 }
 
-void Window::SetTick(void Tick(Object* sender, Uint32 deltaTime))
+void Window::SetUpdate(void Update(Object* sender, Uint32 deltaTime))
 {
-	this->Tick = Tick;
+	this->Update = Update;
 }
 
 void Window::SetLocationChanged(void LocationChanged(Object* sender, SDL_WindowEvent e))
@@ -288,10 +276,25 @@ void Window::Initialize()
 		SDL_RendererFlags::SDL_RENDERER_ACCELERATED |
 		(vSync ? SDL_RendererFlags::SDL_RENDERER_PRESENTVSYNC : 0)
 	);
+	AddTimer(this);
 }
 
 void Window::UpdateLayout()
 {
+	// Обрабтка таймеров
+	Uint32 tick = SDL_GetTicks();
+	Uint32 deltaTime = tick - lastTick;
+	if (Update)
+	{
+		Update(this, deltaTime);
+	}
+	for (int i = 0; i < timers.size(); i++)
+	{
+		timers[i]->InvokeEventTick(this, deltaTime);
+	}
+	lastTick = tick;
+
+	// Отрисовка окна
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{

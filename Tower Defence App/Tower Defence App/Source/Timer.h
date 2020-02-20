@@ -6,8 +6,7 @@
 using namespace std;
 
 // Объект "Таймер"
-class Timer:
-	public Object
+class Timer
 {
 	// Количество тактов в секунде
 	const Uint32 TicksPerSecond = 1000;
@@ -29,14 +28,14 @@ class Timer:
 
 
 	// Происходит перед каждым обновлением окна
-	function<void(Object*, Object*, Uint32)> Tick = nullptr;
+	function<void(Object*, Timer*, Uint32)> Tick = nullptr;
 
 public:
 	// Обработка цикла обработки окна
 	void InvokeEventTick(Object* owner, Uint32 deltaTime);
 
 	// Задает метод для обработки события Tick
-	void SetTick(void Tick(Object*, Object*, Uint32));
+	void SetTick(void Tick(Object*, Timer*, Uint32));
 	// Начинает работу таймера
 	void Start();
 	// Приостанавливает работу таймера
@@ -44,6 +43,10 @@ public:
 	// Останавливает таймер
 	void Stop();
 	
+	// Возвращает статус работы таймера
+	bool GetIsEnabled();
+	// Возвращает статус паузы таймера
+	bool GetIsPaused();
 	// Возвращает время работы таймера
 	Uint32 GetEnableTime();
 	// Возвращает время паузы таймера
