@@ -7,7 +7,6 @@ GameWindow::GameWindow()
 	SetKeyDown(GameWindow_KeyDown);
 	SetTick(GameWindowTimer_Tick);
 	SetUpdate(GameWindow_Update);
-	SetInterval(5000);
 
 	// Интерфейс боковой панели игры
 	Image* interface = new Image();
@@ -97,9 +96,24 @@ GameWindow::GameWindow()
 
 }
 
+void GameWindow::SpawnEnemies(Uint32 deltaTime)
+{
+	if (waves.size() >= wave)
+	{
+		for (int i = 0; i < waves[wave - 1]->spawnTimings.size(); i++)
+		{
+			if (waves[wave - 1]->spawnTimings[i]->spawnTiming >= GetEnableTime() &&
+				waves[wave - 1]->spawnTimings[i]->spawnTiming < GetEnableTime() + deltaTime)
+			{
+				cout << "Enemy Spawned: " << waves[wave - 1]->spawnTimings[i]->spawnTiming << " Enable time: " << GetEnableTime() << " Delta: " << deltaTime << endl;
+			}
+		}
+	}
+}
+
 int GameWindow::GetWavesCount()
 {
-	return 5;
+	return waves.size();
 }
 
 int GameWindow::GetWave()
@@ -111,6 +125,10 @@ void GameWindow::SetWave(int Wave)
 {
 	wave = Wave;
 	waveText->SetText(("Волна " + to_string(wave) + " из " + to_string(GetWavesCount())).c_str());
+	if (waves.size() >= wave)
+	{
+		SetInterval(waves[wave - 1]->duration);
+	}
 }
 
 void GameWindow::UpdateWaveTimeText()
@@ -215,6 +233,43 @@ void GameWindow::LoadLevel(int Level)
 				LoadTowerInfo(towers[x][y], levelMap[y][x]);
 			}
 		}
+
+		// Загрузка таймингов появление противников
+		waves.push_back(new Wave());
+		waves[waves.size() - 1]->duration = 60000;
+		EnemySpawn* enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 0;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 500;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 1000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 1500;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 2000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 2500;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 3000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 3500;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 4000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 4500;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 5000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 	}
 	if (Level == 2)
 	{
@@ -432,4 +487,8 @@ void GameWindow_Update(Object* owner, Uint32 deltaTime)
 {
 	GameWindow* window = (GameWindow*)owner;
 	window->UpdateWaveTimeText();
+	if (window->GetIsEnabled())
+	{
+		window->SpawnEnemies(deltaTime);
+	}
 }

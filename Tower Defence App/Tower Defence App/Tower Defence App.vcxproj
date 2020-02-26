@@ -29,6 +29,7 @@
     <ClCompile Include="Source\Tower.cpp" />
     <ClCompile Include="Source\VisualElement.cpp" />
     <ClCompile Include="Source\VisualResource.cpp" />
+    <ClCompile Include="Source\Wave.cpp" />
     <ClCompile Include="Source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +42,7 @@
     <ClInclude Include="Source\Tower.h" />
     <ClInclude Include="Source\VisualElement.h" />
     <ClInclude Include="Source\VisualResource.h" />
+    <ClInclude Include="Source\Wave.h" />
     <ClInclude Include="Source\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Text.h"
 #include "Tower.h"
+#include "Wave.h"
 
 class GameWindow :
 	public Window
@@ -25,6 +26,8 @@ class GameWindow :
 	// Изображение тайла башни магов
 	VisualResource* magesTile = new VisualResource(IMG_Load(".\\Resources\\mages.png"));
 
+	// Список волн противников
+	vector<Wave*> waves;
 	// Список башен
 	Tower* towers[16][11];
 	// Изображение для выделения объекта
@@ -53,6 +56,8 @@ class GameWindow :
 public:
 	GameWindow();
 
+	// Добавление новых противников
+	void SpawnEnemies(Uint32 deltaTime);
 	// Возвращает общее количество волн на уровне
 	int GetWavesCount();
 	// Возвращает номер текущей волны противников
@@ -79,6 +84,8 @@ public:
 	void UpdateInterface();
 	// Загрузка информации о башне
 	void LoadTowerInfo(Tower* tower, TowerType type);
+	// Добавить нового противника
+	//void AddEnemy();
 
 };
 

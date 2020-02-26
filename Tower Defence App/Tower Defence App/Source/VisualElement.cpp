@@ -131,6 +131,7 @@ bool VisualElement::GetIsVisible()
 void VisualElement::SetIsVisible(bool IsVisible)
 {
 	isVisible = IsVisible;
+	isMouseOver = false;
 }
 
 SDL_Rect* VisualElement::GetDestinationRectangle()
