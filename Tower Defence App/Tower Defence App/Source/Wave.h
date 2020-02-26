@@ -1,6 +1,21 @@
 #pragma once
 #include <vector>
 #include <SDL.h>
+#include "VisualResource.h"
+
+enum Direction
+{
+	Top,
+	Right,
+	Down,
+	Left
+};
+
+struct Path
+{
+	Direction direction;
+	int length;
+};
 
 struct EnemySpawn
 {

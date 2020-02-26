@@ -4,6 +4,7 @@
 #include "Text.h"
 #include "Tower.h"
 #include "Wave.h"
+#include "Enemy.h"
 
 class GameWindow :
 	public Window
@@ -16,7 +17,13 @@ class GameWindow :
 	int gold = 0;
 	// Выделенный объект
 	Tower* target = nullptr;
+	// Распоожение точки спавна
+	int x = 0;
+	int y = 0;
+	vector<Path*> paths;
 
+	// Изображение тайла врага
+	VisualResource* enemyTile = new VisualResource(IMG_Load(".\\Resources\\enemy.png"));
 	// Изображение тайла травы
 	VisualResource* grassTile = new VisualResource(IMG_Load(".\\Resources\\grass.png"));
 	// Изображение тайла дороги
@@ -26,6 +33,8 @@ class GameWindow :
 	// Изображение тайла башни магов
 	VisualResource* magesTile = new VisualResource(IMG_Load(".\\Resources\\mages.png"));
 
+	// Список противников
+	vector<Enemy*> enemies;
 	// Список волн противников
 	vector<Wave*> waves;
 	// Список башен
@@ -85,7 +94,17 @@ public:
 	// Загрузка информации о башне
 	void LoadTowerInfo(Tower* tower, TowerType type);
 	// Добавить нового противника
-	//void AddEnemy();
+	void AddEnemy(int Health, int Movespeed, VisualResource* Resource);
+	// Удалить противниика
+	void RemoveEnemy(Enemy* enemy);
+	// Очистить список врагов
+	void ClearEnemies();
+	// Очистить список волн
+	void ClearWaves();
+	// Очистить список путей
+	void ClearPaths();
+	// Перемещение противников
+	void MoveEnemies(Uint32 deltatime);
 
 };
 
