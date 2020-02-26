@@ -256,7 +256,7 @@ void GameWindow::LoadLevel(int Level)
 
 		// Загрузка таймингов появление противников
 		waves.push_back(new Wave());
-		waves[waves.size() - 1]->duration = 60000;
+		waves[waves.size() - 1]->duration = 37000;
 		EnemySpawn* enemy1 = new EnemySpawn();
 		enemy1->spawnTiming = 0;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
@@ -302,6 +302,7 @@ void GameWindow::LoadLevel(int Level)
 		SetGold(99999);
 		SetHealth(30);
 		y = 100;
+		x = -50;
 		// Добавить загрузку уровня
 		TowerType levelMap[11][16] =
 		{
@@ -324,6 +325,99 @@ void GameWindow::LoadLevel(int Level)
 				LoadTowerInfo(towers[x][y], levelMap[y][x]);
 			}
 		}
+
+		// Загрузка таймингов появление противников
+		waves.push_back(new Wave());
+		waves[waves.size() - 1]->duration = 60000;
+		EnemySpawn* enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 0;
+		enemy1->EnemyMovespeed = 2000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 2000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 4000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 6000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 8000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 10000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 12000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 14000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 16000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 18000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 20000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+
+		Path* path = new Path();
+		path->direction = Right;
+		path->length = 100;
+		paths.push_back(path); 
+
+		path = new Path();
+		path->direction = Down;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+		
+		path = new Path();
+		path->direction = Top;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Down;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Top;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Down;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
 	}
 	SetWave(1);
 	Start();
@@ -497,6 +591,11 @@ void GameWindow::MoveEnemies(Uint32 deltaTime)
 	}
 }
 
+int GameWindow::GetEnemiesCount()
+{
+	return enemies.size();
+}
+
 void GameWindow_KeyDown(Object* owner, SDL_KeyboardEvent e)
 {
 	GameWindow* window = (GameWindow*)owner;
@@ -571,11 +670,6 @@ void GameWindowTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
 	if (window->GetWavesCount() > window->GetWave())
 	{
 		window->SetWave(window->GetWave() + 1);
-	}
-	else
-	{
-		window->Stop();
-		cout << "Victory!!!!!!";
 	}
 }
 

@@ -25,7 +25,7 @@ bool Enemy::Move(Uint32 deltaTime)
 	if (paths.size() >= currentPath)
 	{
 		// ƒвижение
-		int move = (int)((25.0 / 1000.0) * ((double)movespeed / 100.0) * ((double)deltaTime + (double)downtime));
+		int move = (int)((50.0 / 1000.0) * ((double)movespeed / 100.0) * ((double)deltaTime + (double)downtime));
 		if (move)
 		{
 			while (move)
