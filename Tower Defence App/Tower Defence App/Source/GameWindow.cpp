@@ -11,49 +11,57 @@ GameWindow::GameWindow()
 	// Интерфейс боковой панели игры
 	Image* interface = new Image();
 	interface->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\interface.png")));
+	interface->SetZIndex(100);
 	AddVisualElement(interface);
 
 	// Рамка для выделения объекта
 	selectTargetImage->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\target.png")));
 	selectTargetImage->SetZIndex(100);
 	selectTargetImage->SetSize(50, 50);
-	selectTargetImage->SetZIndex(100);
+	selectTargetImage->SetZIndex(1);
 	selectTargetImage->SetIsVisible(false);
 	AddVisualElement(selectTargetImage);
 
 	// Выводит номер текущей волны врагов на экран
 	waveText->SetLocation(815, 11 + 15 * 0);
 	waveText->SetForeground({ 255, 255, 255 });
+	waveText->SetZIndex(101);
 	AddVisualElement(waveText);
 
 	// Выводит номер текущей волны врагов на экран
 	waveTimeText->SetLocation(815, 11 + 15 * 1);
 	waveTimeText->SetForeground({ 255, 255, 255 });
+	waveTimeText->SetZIndex(101);
 	AddVisualElement(waveTimeText);
 
 	// Выводит показатель здоровья игрока на экран
 	healthText->SetLocation(815, 11 + 15 * 2);
 	healthText->SetForeground({ 255, 255, 255 });
+	healthText->SetZIndex(101);
 	AddVisualElement(healthText);
 
 	// Выводит показатель золота игрока на экран
 	goldText->SetLocation(815, 11 + 15 * 3);
 	goldText->SetForeground({ 255, 255, 255 });
+	goldText->SetZIndex(101);
 	AddVisualElement(goldText);
 
 	// Изображение выделенного элемента
 	targetImage->SetLocation(865, 80);
 	targetImage->SetSize(100, 100);
+	targetImage->SetZIndex(101);
 	AddVisualElement(targetImage);
 
 	// Название выделенного элемента
 	targetTitle->SetLocation(815, 180);
 	targetTitle->SetFontSize(14);
+	targetTitle->SetZIndex(101);
 	AddVisualElement(targetTitle);
 
 	// Описание выделенного элемента
 	targetDescription->SetLocation(815, 197);
 	targetDescription->SetLength(194);
+	targetDescription->SetZIndex(101);
 	AddVisualElement(targetDescription);
 
 	// Кнопка постройки башни лучников
@@ -62,6 +70,7 @@ GameWindow::GameWindow()
 	buildArchersTower->SetLength(194);
 	buildArchersTower->SetIsVisible(false);
 	buildArchersTower->SetClick(BuildArchersTower_Click);
+	buildArchersTower->SetZIndex(101);
 	AddVisualElement(buildArchersTower);
 
 	// Кнопка постройки башни мага
@@ -70,6 +79,7 @@ GameWindow::GameWindow()
 	buildMageTower->SetLength(194);
 	buildMageTower->SetIsVisible(false);
 	buildMageTower->SetClick(BuildMageTower_Click);
+	buildMageTower->SetZIndex(101);
 	AddVisualElement(buildMageTower);
 
 	// Кнопка поломки башни
@@ -78,6 +88,7 @@ GameWindow::GameWindow()
 	destroyTower->SetLength(194);
 	destroyTower->SetIsVisible(false);
 	destroyTower->SetClick(DestroyTowerButton_Click);
+	destroyTower->SetZIndex(101);
 	AddVisualElement(destroyTower);
 
 	// Кнопка загрузки первого уровня
@@ -85,6 +96,7 @@ GameWindow::GameWindow()
 	levelOneButton->SetLocation(815, 500);
 	levelOneButton->SetFontSize(14);
 	levelOneButton->SetClick(LevelOneButton_Click);
+	levelOneButton->SetZIndex(101);
 	AddVisualElement(levelOneButton);
 
 	// Кнопка загрузки второго уровня
@@ -92,6 +104,7 @@ GameWindow::GameWindow()
 	levelTwoButton->SetLocation(815, 517);
 	levelTwoButton->SetFontSize(14);
 	levelTwoButton->SetClick(LevelTwoButton_Click);
+	levelTwoButton->SetZIndex(101);
 	AddVisualElement(levelTwoButton);
 
 }
@@ -217,6 +230,7 @@ void GameWindow::LoadLevel(int Level)
 		SetGold(100);
 		SetHealth(1);
 		y = 250;
+		x = -50;
 		// Добавить загрузку уровня
 		TowerType levelMap[11][16] =
 		{
@@ -247,39 +261,39 @@ void GameWindow::LoadLevel(int Level)
 		enemy1->spawnTiming = 0;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 		enemy1 = new EnemySpawn();
-		enemy1->spawnTiming = 1000;
-		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
-		enemy1 = new EnemySpawn();
 		enemy1->spawnTiming = 2000;
-		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
-		enemy1 = new EnemySpawn();
-		enemy1->spawnTiming = 3000;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 		enemy1 = new EnemySpawn();
 		enemy1->spawnTiming = 4000;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 		enemy1 = new EnemySpawn();
-		enemy1->spawnTiming = 5000;
-		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
-		enemy1 = new EnemySpawn();
 		enemy1->spawnTiming = 6000;
-		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
-		enemy1 = new EnemySpawn();
-		enemy1->spawnTiming = 7000;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 		enemy1 = new EnemySpawn();
 		enemy1->spawnTiming = 8000;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 		enemy1 = new EnemySpawn();
-		enemy1->spawnTiming = 9000;
+		enemy1->spawnTiming = 10000;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 		enemy1 = new EnemySpawn();
-		enemy1->spawnTiming = 10000;
+		enemy1->spawnTiming = 12000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 14000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 16000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 18000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 20000;
 		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
 
 		Path* path = new Path();
 		path->direction = Right;
-		path->length = 100;
+		path->length = 850;
 		paths.push_back(path);
 
 	}
