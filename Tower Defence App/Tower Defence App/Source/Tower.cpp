@@ -30,3 +30,13 @@ void Tower::SetAttackSpeed(int AttackSpeed)
 	attackSpeed = AttackSpeed;
 	SetInterval(2000 / (attackSpeed / 100));
 }
+
+bool Tower::GetIsReady()
+{
+	return isReady;
+}
+
+void Tower::SetIsReady(bool IsReady)
+{
+	isReady = IsReady;
+}

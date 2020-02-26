@@ -21,6 +21,8 @@ class Tower :
 	int damage = 0;
 	// Скорость атаки башни
 	int attackSpeed = 0;
+	// Готовность к выстрелу
+	bool isReady = true;
 
 public:
 	// Возвращает тип объекта
@@ -35,5 +37,9 @@ public:
 	int GetAttackSpeed();
 	// Задает скорость атаки башни
 	void SetAttackSpeed(int AttackSpeed);
+	// Возвращает готовность башни к выстрелу
+	bool GetIsReady();
+	// Задает готовность башни к выстрелу
+	void SetIsReady(bool IsReady);
 
 };
