@@ -64,6 +64,22 @@ GameWindow::GameWindow()
 	targetDescription->SetZIndex(101);
 	AddVisualElement(targetDescription);
 
+	// Текст "Победа"
+	victoryText->SetLocation(815, 197);
+	victoryText->SetLength(194);
+	victoryText->SetZIndex(101);
+	victoryText->SetFontSize(32);
+	victoryText->SetIsVisible(false);
+	AddVisualElement(victoryText);
+
+	// Текст "Поражение"
+	defeatText->SetLocation(815, 197);
+	defeatText->SetLength(194);
+	defeatText->SetZIndex(101);
+	defeatText->SetFontSize(26);
+	defeatText->SetIsVisible(false);
+	AddVisualElement(defeatText);
+
 	// Кнопка постройки башни лучников
 	buildArchersTower->SetLocation(815, 300);
 	buildArchersTower->SetFontSize(14);
@@ -228,7 +244,7 @@ void GameWindow::LoadLevel(int Level)
 	if (Level == 1)
 	{
 		SetGold(100);
-		SetHealth(1);
+		SetHealth(5);
 		y = 250;
 		x = -50;
 		// Добавить загрузку уровня
@@ -300,7 +316,7 @@ void GameWindow::LoadLevel(int Level)
 	if (Level == 2)
 	{
 		SetGold(99999);
-		SetHealth(30);
+		SetHealth(5);
 		y = 100;
 		x = -50;
 		// Добавить загрузку уровня
@@ -328,7 +344,7 @@ void GameWindow::LoadLevel(int Level)
 
 		// Загрузка таймингов появление противников
 		waves.push_back(new Wave());
-		waves[waves.size() - 1]->duration = 60000;
+		waves[waves.size() - 1]->duration = 70000;
 		EnemySpawn* enemy1 = new EnemySpawn();
 		enemy1->spawnTiming = 0;
 		enemy1->EnemyMovespeed = 2000;
@@ -431,8 +447,10 @@ void GameWindow::UpdateInterface()
 	buildArchersTower->SetIsVisible(false);
 	buildMageTower->SetIsVisible(false);
 	destroyTower->SetIsVisible(false);
+	victoryText->SetIsVisible(false);
+	defeatText->SetIsVisible(false);
 	if (target)
-	{
+		{
 		targetImage->SetIsVisible(true);
 		targetImage->SetVisualResource(target->GetVisualResource());
 		targetTitle->SetIsVisible(true);
@@ -515,6 +533,7 @@ void GameWindow::AddEnemy(int Health, int Movespeed, VisualResource* Resource)
 	enemy->SetHeight(50);
 	enemy->SetLeft(x);
 	enemy->SetTop(y);
+	enemy->SetZIndex(2);
 	enemies.push_back(enemy);
 	for (int i = 0; i < paths.size(); i++)
 	{
@@ -596,6 +615,16 @@ int GameWindow::GetEnemiesCount()
 	return enemies.size();
 }
 
+void GameWindow::SetIsWin()
+{
+	victoryText->SetIsVisible(true);
+}
+
+void GameWindow::SetIsDefeat()
+{
+	defeatText->SetIsVisible(true);
+}
+
 void GameWindow_KeyDown(Object* owner, SDL_KeyboardEvent e)
 {
 	GameWindow* window = (GameWindow*)owner;
@@ -609,8 +638,11 @@ void Tower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
 {
 	GameWindow* gWindow = (GameWindow*)owner;
 	Tower* tower = (Tower*)sender;
-	gWindow->SetTarget(tower);
-	gWindow->UpdateInterface();
+	if (gWindow->GetIsEnabled())
+	{
+		gWindow->SetTarget(tower);
+		gWindow->UpdateInterface();
+	}
 }
 
 void BuildArchersTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
@@ -671,6 +703,12 @@ void GameWindowTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
 	{
 		window->SetWave(window->GetWave() + 1);
 	}
+	else
+	{
+		window->SetTarget(nullptr);
+		window->SetIsWin();
+		window->Stop();
+	}
 }
 
 void TowerTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
@@ -700,6 +738,8 @@ void GameWindow_Update(Object* owner, Uint32 deltaTime)
 		window->MoveEnemies(deltaTime);
 		if (window->GetHealth() <= 0)
 		{
+			window->SetTarget(nullptr);
+			window->SetIsDefeat();
 			window->Stop();
 		}
 	}
