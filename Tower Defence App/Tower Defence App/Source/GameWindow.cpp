@@ -610,6 +610,21 @@ void GameWindow::MoveEnemies(Uint32 deltaTime)
 	}
 }
 
+void GameWindow::TowersShoot()
+{
+	for (int x = 0; x < 16; x++)
+	{
+		for (int y = 0; y < 11; y++)
+		{
+			if (towers[x][y]->GetIsReady())
+			{
+				cout << "shoot";
+				towers[x][y]->SetIsReady(false);
+			}
+		}
+	}
+}
+
 int GameWindow::GetEnemiesCount()
 {
 	return enemies.size();
@@ -717,14 +732,7 @@ void TowerTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
 	Tower* tower = (Tower*)sender;
 	if (window->GetIsEnabled())
 	{
-		if (tower->GetType() == TowerType::MageTower)
-		{
-			cout << "Mage tower shoot" << endl;
-		}
-		else
-		{
-			cout << "Archers tower shoot" << endl;
-		}
+		tower->SetIsReady(true);
 	}
 }
 
@@ -736,6 +744,7 @@ void GameWindow_Update(Object* owner, Uint32 deltaTime)
 	{
 		window->SpawnEnemies(deltaTime);
 		window->MoveEnemies(deltaTime);
+		window->TowersShoot();
 		if (window->GetHealth() <= 0)
 		{
 			window->SetTarget(nullptr);

@@ -109,6 +109,8 @@ public:
 	void ClearPaths();
 	// Перемещение противников
 	void MoveEnemies(Uint32 deltatime);
+	// Стрельба
+	void TowersShoot();
 	//  Возвращает количество противников на уровне
 	int GetEnemiesCount();
 	// Задает победу
