@@ -74,7 +74,6 @@ bool Enemy::Move(Uint32 deltaTime)
 		{
 			downtime += deltaTime;
 		}
-		cout << "Move: " << move << "Downtime: " << downtime << endl;
 		return true;
 	}
 	else
