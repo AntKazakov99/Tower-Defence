@@ -22,7 +22,7 @@ class Tower :
 	// Скорость атаки башни
 	int attackSpeed = 0;
 	// Готовность к выстрелу
-	bool isReady = true;
+	bool isReady = false;
 
 public:
 	// Возвращает тип объекта

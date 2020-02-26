@@ -618,8 +618,26 @@ void GameWindow::TowersShoot()
 		{
 			if (towers[x][y]->GetIsReady())
 			{
-				cout << "shoot";
-				towers[x][y]->SetIsReady(false);
+				for (int i = 0; i < enemies.size(); i++)
+				{
+					int centerX = enemies[i]->GetLeft() + (enemies[i]->GetWidth() / 2),
+						centerY = enemies[i]->GetTop() + (enemies[i]->GetHeight() / 2);
+					if (centerX >= towers[x][y]->GetLeft() - 100 && 
+						centerX <= towers[x][y]->GetLeft() + towers[x][y]->GetWidth() + 100 &&
+						centerY >= towers[x][y]->GetTop() - 100 &&
+						centerY <= towers[x][y]->GetLeft() + towers[x][y]->GetWidth() + 100
+						&& towers[x][y]->GetIsReady())
+					{
+						towers[x][y]->SetIsReady(false);
+						enemies[i]->SetHealth(enemies[i]->GetHealth() - towers[x][y]->GetDamage());
+						if (enemies[i]->GetHealth() <= 0)
+						{
+							RemoveEnemy(enemies[i]);
+							SetGold(GetGold() + 25);
+						}
+						break;
+					}
+				}
 			}
 		}
 	}
