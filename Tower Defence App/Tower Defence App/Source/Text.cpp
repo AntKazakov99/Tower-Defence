@@ -4,11 +4,18 @@ void Text::CreateSurface()
 {
 	if (font)
 	{
-		resource->SetSurface(TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground));
+		if (length != 0)
+		{
+			resource->SetSurface(TTF_RenderUTF8_Blended_Wrapped(font, this->text.c_str(), foreground, length));
+		}
+		else
+		{
+			resource->SetSurface(TTF_RenderUTF8_Blended(font, this->text.c_str(), foreground));
+		}
 		if (resource->GetSurface())
 		{
-			dstRect->h = resource->GetSurface()->h;
-			dstRect->w = resource->GetSurface()->w;
+			SetWidth(resource->GetSurface()->w);
+			SetHeight(resource->GetSurface()->h);
 		}
 	}
 }
@@ -24,36 +31,13 @@ Text::Text(const char* text):
 	CreateSurface();
 }
 
-int Text::GetLeft()
-{
-	return dstRect->x;
-}
-
-void Text::SetLeft(int left)
-{
-	dstRect->x = left;
-}
-
-int Text::GetTop()
-{
-	return dstRect->y;
-}
-
-void Text::SetTop(int top)
-{
-	dstRect->y = top;
-}
-
-void Text::SetLocation(int left, int top)
-{
-	dstRect->x = left;
-	dstRect->y = top;
-}
-
 void Text::SetText(const char* text)
 {
-	this->text = text;
-	CreateSurface();
+	if (this->text != text)
+	{
+		this->text = text;
+		CreateSurface();
+	}
 }
 
 const char* Text::GetText()
@@ -88,6 +72,17 @@ void Text::SetForeground(SDL_Color foreground)
 	CreateSurface();
 }
 
+int Text::GetLength()
+{
+	return length;
+}
+
+void Text::SetLength(int Length)
+{
+	length = Length;
+	CreateSurface();
+}
+
 SDL_Color Text::GetForeground()
 {
 	return foreground;
@@ -101,9 +96,4 @@ VisualResource* Text::GetVisualResource()
 SDL_Rect* Text::GetSourceRectangle()
 {
 	return nullptr;
-}
-
-SDL_Rect* Text::GetDestinationRectangle()
-{
-	return dstRect;
 }

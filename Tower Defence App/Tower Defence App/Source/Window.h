@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "VisualElement.h"
+#include "Timer.h"
 #include "Object.h"
 
 using namespace std;
@@ -26,7 +27,8 @@ enum WindowState
 
 // Позволяет создавать, настраивать и отображать содержимое окна
 class Window:
-	public Object
+	public Object,
+	public Timer
 {
 	// SDL реализация окна
 	SDL_Window* window = NULL;
@@ -34,6 +36,8 @@ class Window:
 	SDL_Renderer* renderer = NULL;
 	// Список отображаемых элементов
 	vector<VisualElement*> vElements;
+	// Список таймеров
+	vector<Timer*> timers;
 	// Идентификатор окна
 	int id = 0;
 	// Заголовок окна
@@ -49,44 +53,41 @@ class Window:
 	// Статус работы вертикальной синхронизации
 	bool vSync = false;
 	// Время последнего обновления окна
-	int lastTick = SDL_GetTicks();
+	Uint32 lastTick = 0;
 
 protected:
 	// Происходит при каждом обновлении окна
-	virtual void Tick(Uint32 deltaTime);
-
+	function<void(Object*, Uint32 deltaTime)> Update = nullptr;
 	// Происходит при изменении расположения окна
-	virtual void LocationChanged(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> LocationChanged = nullptr;
 	// Происходит при изменении размеров окна
-	virtual void SizeChanged(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> SizeChanged = nullptr;
 	// Происходит, когда изменяется свойство WindowState окна
-	virtual void StateChanged(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> StateChanged = nullptr;
 	// Происходит, когда указатель мыши попадает внутрь границ окна
-	virtual void MouseEnter(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> MouseEnter = nullptr;
 	// Происходит, когда указатель мыши покидает границы данного элемента
-	virtual void MouseLeave(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> MouseLeave = nullptr;
 	// Происходит при перемещении окна на передний план
-	virtual void Activated(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> Activated = nullptr;
 	// Происходит при перемещении окна на задний план
-	virtual void Deactivated(SDL_WindowEvent e);
+	function<void(Object*, SDL_WindowEvent e)> Deactivated = nullptr;
 	// Происходит при закрытии окна
-	virtual void Closed(SDL_WindowEvent e);
-
+	function<void(Object*, SDL_WindowEvent e)> Closed = nullptr;
 	// Происходит при нажатии клавиши
-	virtual void KeyDown(SDL_KeyboardEvent e);
+	function<void(Object*, SDL_KeyboardEvent e)> KeyDown = nullptr;
 	// Происходит при отпускании клавиши
-	virtual void KeyUp(SDL_KeyboardEvent e);
+	function<void(Object*, SDL_KeyboardEvent e)> KeyUp = nullptr;
 	// Происходит при вводе текста
-	virtual void TextInput(SDL_TextInputEvent e);
-
+	function<void(Object*, SDL_TextInputEvent e)> TextInput = nullptr;
 	// Происходит при перемещении указателя мыши
-	virtual void MouseMove(SDL_MouseMotionEvent e);
+	function<void(Object*, SDL_MouseMotionEvent e)> MouseMove = nullptr;
 	// Происходит при нажатии любой кнопки мыши
-	virtual void MouseDown(SDL_MouseButtonEvent e);
+	function<void(Object*, SDL_MouseButtonEvent e)> MouseDown = nullptr;
 	// Происходит при отпускании любой кнопки мыши
-	virtual void MouseUp(SDL_MouseButtonEvent e);
+	function<void(Object*, SDL_MouseButtonEvent e)> MouseUp = nullptr;
 	// Происходит при вращении колесика мыши
-	virtual void MouseWheel(SDL_MouseWheelEvent e);
+	function<void(Object*, SDL_MouseWheelEvent e)> MouseWheel = nullptr;
 
 public:
 	~Window();
@@ -111,14 +112,12 @@ public:
 	void InvokeWindowEventFocusLost(SDL_WindowEvent e);
 	// Обработка SDL_WINDOWEVENT_CLOSE
 	void InvokeWindowEventClose(SDL_WindowEvent e);
-
 	// Обработка SDL_KEYDOWN
 	void InvokeEventKeyDown(SDL_KeyboardEvent e);
 	// Обработка SDL_KEYUP
 	void InvokeEventKeyUp(SDL_KeyboardEvent e);
 	// Обработка SDL_TEXTINPUT
 	void InvokeEventTextInput(SDL_TextInputEvent e);
-
 	// Обработка SDL_MOUSEMOTION
 	void InvokeEventMouseMotion(SDL_MouseMotionEvent e);	
 	// Обработка SDL_MOUSEBUTTONDOWN
@@ -127,6 +126,39 @@ public:
 	void InvokeEventMouseButtonUp(SDL_MouseButtonEvent e);
 	// Обработка SDL_MOUSEWHEEL
 	void InvokeEventMouseWheel(SDL_MouseWheelEvent e);
+
+	// Задает метод для обработки события Update
+	void SetUpdate(void Update(Object* sender, Uint32 deltaTime));
+	// Задает метод для обработки события LocationChanged
+	void SetLocationChanged(void LocationChanged(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события SizeChanged
+	void SetSizeChanged(void SizeChanged(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события StateChanged
+	void SetStateChanged(void StateChanged(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события MouseEnter
+	void SetMouseEnter(void MouseEnter(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события MouseLeave
+	void SetMouseLeave(void MouseLeave(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события Activated
+	void SetActivated(void Activated(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события Deactivated
+	void SetDeactivated(void Deactivated(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события Closed
+	void SetClosed(void Closed(Object* sender, SDL_WindowEvent e));
+	// Задает метод для обработки события KeyDown
+	void SetKeyDown(void KeyDown(Object* sender, SDL_KeyboardEvent e));
+	// Задает метод для обработки события KeyUp
+	void SetKeyUp(void KeyUp(Object* sender, SDL_KeyboardEvent e));
+	// Задает метод для обработки события TextInput
+	void SetTextInput(void TextInput(Object* sender, SDL_TextInputEvent e));
+	// Задает метод для обработки события MouseMove
+	void SetMouseMove(void MouseMove(Object* sender, SDL_MouseMotionEvent e));
+	// Задает метод для обработки события MouseDown
+	void SetMouseDown(void MouseDown(Object* sender, SDL_MouseButtonEvent e));
+	// Задает метод для обработки события MouseUp
+	void SetMouseUp(void MouseUp(Object* sender, SDL_MouseButtonEvent e));
+	// Задает метод для обработки события MouseWheel
+	void SetMouseWheel(void MouseWheel(Object* sender, SDL_MouseWheelEvent e));
 
 	// Инициализация окна, обновление параметров рендеринга
 	void Initialize();
@@ -162,6 +194,9 @@ public:
 	void AddVisualElement(VisualElement* vElement);
 	// Удаляет элемент из списка отображаемых объектов
 	void RemoveVisualElement(VisualElement* vElement);
+	// Добавляет новый таймер в список обрабатываемых таймеров
+	void AddTimer(Timer* timer);
+	// Удаляет таймер из списка обрабатываемых таймеров
+	void RemoveTimer(Timer* timer);
 
 };
-

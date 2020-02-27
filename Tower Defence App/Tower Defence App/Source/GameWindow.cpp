@@ -4,62 +4,770 @@ GameWindow::GameWindow()
 {
 	SetTitle("Tower Defence ver.0.0.1");
 	Initialize();
+	SetKeyDown(GameWindow_KeyDown);
+	SetTick(GameWindowTimer_Tick);
+	SetUpdate(GameWindow_Update);
 
-	// Добавление на экран кнопки загрузки первого уровня
-	Text* LevelOneButton = new Text("Уровень 1");
-	LevelOneButton->SetForeground({ 255, 255, 255 });
-	LevelOneButton->SetLocation(805, 100);
-	LevelOneButton->SetZIndex(100);
-	LevelOneButton->SetClick(LevelOneButton_Click);
-	AddVisualElement(LevelOneButton);
+	// Интерфейс боковой панели игры
+	Image* interface = new Image();
+	interface->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\interface.png")));
+	interface->SetZIndex(100);
+	AddVisualElement(interface);
 
-	// Добавление на экран кнопки загрузки второго уровня
-	Text* LevelTwoButton = new Text("Уровень 2");
-	LevelTwoButton->SetForeground({ 255, 255, 255 });
-	LevelTwoButton->SetLocation(805, 110);
-	LevelTwoButton->SetZIndex(100);
-	LevelTwoButton->SetClick(LevelTwoButton_Click);
-	AddVisualElement(LevelTwoButton);
+	// Рамка для выделения объекта
+	selectTargetImage->SetVisualResource(new VisualResource(IMG_Load(".\\Resources\\target.png")));
+	selectTargetImage->SetZIndex(100);
+	selectTargetImage->SetSize(50, 50);
+	selectTargetImage->SetZIndex(1);
+	selectTargetImage->SetIsVisible(false);
+	AddVisualElement(selectTargetImage);
 
-	// Добавление на экран текущего здоровья
-	Text* HealthText = new Text();
-	HealthText->SetForeground({ 255, 0, 0 });
-	HealthText->SetLeft(805);
-	HealthText->SetZIndex(100);
-	HealthText->SetUpdate(HealthText_Update);
-	AddVisualElement(HealthText);
+	// Выводит номер текущей волны врагов на экран
+	waveText->SetLocation(815, 11 + 15 * 0);
+	waveText->SetForeground({ 255, 255, 255 });
+	waveText->SetZIndex(101);
+	AddVisualElement(waveText);
 
-	// Добавление на экран текущего золота
-	Text* GoldText = new Text();
-	GoldText->SetForeground({ 255, 255, 0 });
-	GoldText->SetLocation(805, 20);
-	GoldText->SetZIndex(100);
-	GoldText->SetUpdate(GoldText_Update);
-	AddVisualElement(GoldText);
+	// Выводит номер текущей волны врагов на экран
+	waveTimeText->SetLocation(815, 11 + 15 * 1);
+	waveTimeText->SetForeground({ 255, 255, 255 });
+	waveTimeText->SetZIndex(101);
+	AddVisualElement(waveTimeText);
+
+	// Выводит показатель здоровья игрока на экран
+	healthText->SetLocation(815, 11 + 15 * 2);
+	healthText->SetForeground({ 255, 255, 255 });
+	healthText->SetZIndex(101);
+	AddVisualElement(healthText);
+
+	// Выводит показатель золота игрока на экран
+	goldText->SetLocation(815, 11 + 15 * 3);
+	goldText->SetForeground({ 255, 255, 255 });
+	goldText->SetZIndex(101);
+	AddVisualElement(goldText);
+
+	// Изображение выделенного элемента
+	targetImage->SetLocation(865, 80);
+	targetImage->SetSize(100, 100);
+	targetImage->SetZIndex(101);
+	AddVisualElement(targetImage);
+
+	// Название выделенного элемента
+	targetTitle->SetLocation(815, 180);
+	targetTitle->SetFontSize(14);
+	targetTitle->SetZIndex(101);
+	AddVisualElement(targetTitle);
+
+	// Описание выделенного элемента
+	targetDescription->SetLocation(815, 197);
+	targetDescription->SetLength(194);
+	targetDescription->SetZIndex(101);
+	AddVisualElement(targetDescription);
+
+	// Текст "Победа"
+	victoryText->SetLocation(815, 197);
+	victoryText->SetLength(194);
+	victoryText->SetZIndex(101);
+	victoryText->SetFontSize(32);
+	victoryText->SetIsVisible(false);
+	AddVisualElement(victoryText);
+
+	// Текст "Поражение"
+	defeatText->SetLocation(815, 197);
+	defeatText->SetLength(194);
+	defeatText->SetZIndex(101);
+	defeatText->SetFontSize(26);
+	defeatText->SetIsVisible(false);
+	AddVisualElement(defeatText);
+
+	// Кнопка постройки башни лучников
+	buildArchersTower->SetLocation(815, 300);
+	buildArchersTower->SetFontSize(14);
+	buildArchersTower->SetLength(194);
+	buildArchersTower->SetIsVisible(false);
+	buildArchersTower->SetClick(BuildArchersTower_Click);
+	buildArchersTower->SetZIndex(101);
+	AddVisualElement(buildArchersTower);
+
+	// Кнопка постройки башни мага
+	buildMageTower->SetLocation(815, 370);
+	buildMageTower->SetFontSize(14);
+	buildMageTower->SetLength(194);
+	buildMageTower->SetIsVisible(false);
+	buildMageTower->SetClick(BuildMageTower_Click);
+	buildMageTower->SetZIndex(101);
+	AddVisualElement(buildMageTower);
+
+	// Кнопка поломки башни
+	destroyTower->SetLocation(815, 300);
+	destroyTower->SetFontSize(14);
+	destroyTower->SetLength(194);
+	destroyTower->SetIsVisible(false);
+	destroyTower->SetClick(DestroyTowerButton_Click);
+	destroyTower->SetZIndex(101);
+	AddVisualElement(destroyTower);
+
+	// Кнопка загрузки первого уровня
+	Text* levelOneButton = new Text("Уровень 1");
+	levelOneButton->SetLocation(815, 500);
+	levelOneButton->SetFontSize(14);
+	levelOneButton->SetClick(LevelOneButton_Click);
+	levelOneButton->SetZIndex(101);
+	AddVisualElement(levelOneButton);
+
+	// Кнопка загрузки второго уровня
+	Text* levelTwoButton = new Text("Уровень 2");
+	levelTwoButton->SetLocation(815, 517);
+	levelTwoButton->SetFontSize(14);
+	levelTwoButton->SetClick(LevelTwoButton_Click);
+	levelTwoButton->SetZIndex(101);
+	AddVisualElement(levelTwoButton);
 
 }
 
-void GoldText_Update(Object* owner, Object* sender, Uint32 deltaTime)
+void GameWindow::SpawnEnemies(Uint32 deltaTime)
 {
-	GameWindow* window = (GameWindow*)owner;
-	Text* text = (Text*)sender;
-	text->SetText(("Текущее золото: " + to_string(window->Gold)).c_str());
+	if (waves.size() >= wave)
+	{
+		for (int i = 0; i < waves[wave - 1]->spawnTimings.size(); i++)
+		{
+			if (waves[wave - 1]->spawnTimings[i]->spawnTiming >= GetEnableTime() &&
+				waves[wave - 1]->spawnTimings[i]->spawnTiming < GetEnableTime() + deltaTime)
+			{
+				AddEnemy(waves[wave - 1]->spawnTimings[i]->EnemyHealth,
+					waves[wave - 1]->spawnTimings[i]->EnemyMovespeed,
+					enemyTile);
+				cout << "Enemy Spawned: " << waves[wave - 1]->spawnTimings[i]->spawnTiming << " Enable time: " << GetEnableTime() << " Delta: " << deltaTime << endl;
+			}
+		}
+	}
 }
 
-void HealthText_Update(Object* owner, Object* sender, Uint32 deltaTime)
+int GameWindow::GetWavesCount()
+{
+	return waves.size();
+}
+
+int GameWindow::GetWave()
+{
+	return wave;
+}
+
+void GameWindow::SetWave(int Wave)
+{
+	wave = Wave;
+	waveText->SetText(("Волна " + to_string(wave) + " из " + to_string(GetWavesCount())).c_str());
+	if (waves.size() >= wave)
+	{
+		SetInterval(waves[wave - 1]->duration);
+	}
+}
+
+void GameWindow::UpdateWaveTimeText()
+{
+	if (GetIsEnabled())
+	{
+		waveTimeText->SetText(
+			((GetEnableTime() / 60000 < 10 ? "0" : "") + to_string(GetEnableTime() / 60000) + ":" +
+			(GetEnableTime() % 60000 / 1000  < 10 ? "0" : "") + to_string(GetEnableTime() % 60000 / 1000) + " из " +
+			(GetInterval() / 60000 < 10 ? "0" : "") + to_string(GetInterval() / 60000) + ":" +
+			((GetInterval() % 60000) / 1000 < 10 ? "0" : "") + to_string((GetInterval() % 60000) / 1000)).c_str());
+	}
+}
+
+int GameWindow::GetHealth()
+{
+	return health;
+}
+
+void GameWindow::SetHealth(int Health)
+{
+	health = Health;
+	healthText->SetText(("Текущее здоровье: " + to_string(health)).c_str());
+}
+
+int GameWindow::GetGold()
+{
+	return gold;
+}
+
+void GameWindow::SetGold(int Gold)
+{
+	gold = Gold;
+	goldText->SetText(("Текущее золото: " + to_string(gold)).c_str());
+}
+
+Tower* GameWindow::GetTarget()
+{
+	return target;
+}
+
+void GameWindow::SetTarget(Tower* Target)
+{
+	target = Target;
+	if (target)
+	{
+		selectTargetImage->SetLocation(target->GetLeft(), target->GetTop());
+		selectTargetImage->SetIsVisible(true);
+	}
+	else
+	{
+		selectTargetImage->SetIsVisible(false);
+	}
+	UpdateInterface();
+}
+
+void GameWindow::LoadLevel(int Level)
+{
+	// Создает объекты башен
+	for (int x = 0; x < 16; x++)
+	{
+		for (int y = 0; y < 11; y++)
+		{
+			if (!towers[x][y])
+			{
+				towers[x][y] = new Tower();
+				towers[x][y]->SetLocation(50 * x, 50 * y);
+				towers[x][y]->SetSize(50, 50);
+				AddVisualElement(towers[x][y]);
+				AddTimer(towers[x][y]);
+				towers[x][y]->SetClick(Tower_Click);
+				towers[x][y]->SetTick(TowerTimer_Tick);
+			}
+		}
+	}
+	ClearEnemies();
+	ClearWaves();
+	ClearPaths();
+	Stop();
+	SetTarget(NULL);
+	if (Level == 1)
+	{
+		SetGold(100);
+		SetHealth(5);
+		y = 250;
+		x = -50;
+		// Добавить загрузку уровня
+		TowerType levelMap[11][16] =
+		{
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+		};
+		for (int x = 0; x < 16; x++)
+		{
+			for (int y = 0; y < 11; y++)
+			{
+				LoadTowerInfo(towers[x][y], levelMap[y][x]);
+			}
+		}
+
+		// Загрузка таймингов появление противников
+		waves.push_back(new Wave());
+		waves[waves.size() - 1]->duration = 37000;
+		EnemySpawn* enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 0;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 2000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 4000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 6000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 8000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 10000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 12000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 14000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 16000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 18000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 20000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+
+		Path* path = new Path();
+		path->direction = Right;
+		path->length = 850;
+		paths.push_back(path);
+
+	}
+	if (Level == 2)
+	{
+		SetGold(99999);
+		SetHealth(5);
+		y = 100;
+		x = -50;
+		// Добавить загрузку уровня
+		TowerType levelMap[11][16] =
+		{
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::Road, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::Road, TowerType::None, TowerType::None, TowerType::Road, TowerType::Road, TowerType::Road},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+			{TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None, TowerType::None},
+		};
+		for (int x = 0; x < 16; x++)
+		{
+			for (int y = 0; y < 11; y++)
+			{
+				LoadTowerInfo(towers[x][y], levelMap[y][x]);
+			}
+		}
+
+		// Загрузка таймингов появление противников
+		waves.push_back(new Wave());
+		waves[waves.size() - 1]->duration = 70000;
+		EnemySpawn* enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 0;
+		enemy1->EnemyMovespeed = 2000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 2000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 4000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 6000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 8000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 10000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 12000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 14000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 16000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 18000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+		enemy1 = new EnemySpawn();
+		enemy1->spawnTiming = 20000;
+		waves[waves.size() - 1]->spawnTimings.push_back(enemy1);
+
+		Path* path = new Path();
+		path->direction = Right;
+		path->length = 100;
+		paths.push_back(path); 
+
+		path = new Path();
+		path->direction = Down;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+		
+		path = new Path();
+		path->direction = Top;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Down;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Top;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Down;
+		path->length = 300;
+		paths.push_back(path);
+
+		path = new Path();
+		path->direction = Right;
+		path->length = 150;
+		paths.push_back(path);
+	}
+	SetWave(1);
+	Start();
+}
+
+void GameWindow::UpdateInterface()
+{
+	targetImage->SetIsVisible(false);
+	targetTitle->SetIsVisible(false);
+	targetDescription->SetIsVisible(false);
+	buildArchersTower->SetIsVisible(false);
+	buildMageTower->SetIsVisible(false);
+	destroyTower->SetIsVisible(false);
+	victoryText->SetIsVisible(false);
+	defeatText->SetIsVisible(false);
+	if (target)
+		{
+		targetImage->SetIsVisible(true);
+		targetImage->SetVisualResource(target->GetVisualResource());
+		targetTitle->SetIsVisible(true);
+		targetDescription->SetIsVisible(true);
+		switch (target->GetType())
+		{
+		case TowerType::None:
+			targetTitle->SetText("Земля");
+			targetDescription->SetText("Пустой участок земли, пригодный для строительства");
+			buildArchersTower->SetIsVisible(true);
+			buildMageTower->SetIsVisible(true);
+			break;
+		case TowerType::Road:
+			targetTitle->SetText("Дорога");
+			targetDescription->SetText("Отрезок дороги, не предназначен для строительства");
+			break;
+		case TowerType::ArcherTower:
+			targetTitle->SetText("Башня лучников");
+			targetDescription->SetText((
+				"Тип урона: Физ.\nНаносимый урон: " + to_string(target->GetDamage()) + "\n" +
+				"Скорость атаки: " + to_string(target->GetAttackSpeed())).c_str());
+			destroyTower->SetIsVisible(true);
+			destroyTower->SetText("Сломать башню\n(Возврат 50)");
+			break;
+		case TowerType::MageTower:
+			targetTitle->SetText("Башня мага");
+			targetDescription->SetText((
+				"Тип урона: Маг.\nНаносимый урон: " + to_string(target->GetDamage()) + "\n" + 
+				"Скорость атаки: " + to_string(target->GetAttackSpeed())).c_str());
+			destroyTower->SetIsVisible(true);
+			destroyTower->SetText("Сломать башню\n(Возврат 100)");
+			break;
+		}
+	}
+	else
+	{
+		targetImage->SetIsVisible(false);
+		targetTitle->SetIsVisible(false);
+		targetDescription->SetIsVisible(false);
+	}
+}
+
+void GameWindow::LoadTowerInfo(Tower* tower, TowerType type)
+{
+	tower->Stop();
+	switch (type)
+	{
+	case TowerType::None:
+		tower->SetType(TowerType::None);
+		tower->SetVisualResource(grassTile);
+		break;
+	case TowerType::Road:
+		tower->SetType(TowerType::Road);
+		tower->SetVisualResource(roadTile);
+		break;
+	case TowerType::ArcherTower:
+		tower->SetType(TowerType::ArcherTower);
+		tower->SetVisualResource(archersTile);
+		tower->SetDamage(30);
+		tower->SetAttackSpeed(200);
+		tower->Start();
+		break;
+	case TowerType::MageTower:
+		tower->SetType(TowerType::MageTower);
+		tower->SetVisualResource(magesTile);
+		tower->SetDamage(60);
+		tower->SetAttackSpeed(100);
+		tower->Start();
+		break;
+	}
+}
+
+void GameWindow::AddEnemy(int Health, int Movespeed, VisualResource* Resource)
+{
+	Enemy* enemy = new Enemy();
+	enemy->SetHealth(Health);
+	enemy->SetMovespeed(Movespeed);
+	enemy->SetVisualResource(enemyTile);
+	enemy->SetWidth(50);
+	enemy->SetHeight(50);
+	enemy->SetLeft(x);
+	enemy->SetTop(y);
+	enemy->SetZIndex(2);
+	enemies.push_back(enemy);
+	for (int i = 0; i < paths.size(); i++)
+	{
+		enemy->AddPath(paths[i]);
+	}
+	AddVisualElement(enemy);
+}
+
+void GameWindow::RemoveEnemy(Enemy* enemy)
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (enemies[i] == enemy)
+		{
+			enemies.erase(enemies.begin() + i);
+			i--;
+		}
+	}
+	RemoveVisualElement(enemy);
+	delete enemy;
+}
+
+void GameWindow::ClearEnemies()
+{
+	while (enemies.size() > 0)
+	{
+		RemoveEnemy(enemies[0]);
+	}
+}
+
+void GameWindow::ClearWaves()
+{
+	while (waves.size() > 0)
+	{
+		Wave* wave = waves[0];
+		for (int i = 0; i < waves.size(); i++)
+		{
+			if (waves[i] == wave)
+			{
+				waves.erase(waves.begin() + i);
+				i--;
+			}
+		}
+		delete wave;
+	}
+}
+
+void GameWindow::ClearPaths()
+{
+	while (paths.size() > 0)
+	{
+		Path* path = paths[0];
+		for (int i = 0; i < paths.size(); i++)
+		{
+			if (paths[i] == path)
+			{
+				paths.erase(paths.begin() + i);
+				i--;
+			}
+		}
+		delete path;
+	}
+}
+
+void GameWindow::MoveEnemies(Uint32 deltaTime)
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->Move(deltaTime))
+		{
+			SetHealth(GetHealth() - 1);
+			RemoveEnemy(enemies[i]);
+		}
+	}
+}
+
+void GameWindow::TowersShoot()
+{
+	for (int x = 0; x < 16; x++)
+	{
+		for (int y = 0; y < 11; y++)
+		{
+			if (towers[x][y]->GetIsReady())
+			{
+				for (int i = 0; i < enemies.size(); i++)
+				{
+					int centerX = enemies[i]->GetLeft() + (enemies[i]->GetWidth() / 2),
+						centerY = enemies[i]->GetTop() + (enemies[i]->GetHeight() / 2);
+					if (centerX >= towers[x][y]->GetLeft() - 100 && 
+						centerX <= towers[x][y]->GetLeft() + towers[x][y]->GetWidth() + 100 &&
+						centerY >= towers[x][y]->GetTop() - 100 &&
+						centerY <= towers[x][y]->GetLeft() + towers[x][y]->GetWidth() + 100
+						&& towers[x][y]->GetIsReady())
+					{
+						towers[x][y]->SetIsReady(false);
+						enemies[i]->SetHealth(enemies[i]->GetHealth() - towers[x][y]->GetDamage());
+						if (enemies[i]->GetHealth() <= 0)
+						{
+							RemoveEnemy(enemies[i]);
+							SetGold(GetGold() + 25);
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+int GameWindow::GetEnemiesCount()
+{
+	return enemies.size();
+}
+
+void GameWindow::SetIsWin()
+{
+	victoryText->SetIsVisible(true);
+}
+
+void GameWindow::SetIsDefeat()
+{
+	defeatText->SetIsVisible(true);
+}
+
+void GameWindow_KeyDown(Object* owner, SDL_KeyboardEvent e)
 {
 	GameWindow* window = (GameWindow*)owner;
-	Text* text = (Text*)sender;
-	text->SetText(("Текущее здоровье: " + to_string(window->Health)).c_str());
+	if (e.keysym.sym == SDLK_ESCAPE)
+	{
+		window->SetTarget(NULL);
+	}
+}
+
+void Tower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+{
+	GameWindow* gWindow = (GameWindow*)owner;
+	Tower* tower = (Tower*)sender;
+	if (gWindow->GetIsEnabled())
+	{
+		gWindow->SetTarget(tower);
+		gWindow->UpdateInterface();
+	}
+}
+
+void BuildArchersTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+{
+	GameWindow* gWindow = (GameWindow*)owner;
+	if (gWindow->GetGold() >= 100)
+	{
+		gWindow->SetGold(gWindow->GetGold() - 100);
+		gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::ArcherTower);
+		gWindow->UpdateInterface();
+	}
+}
+
+void BuildMageTower_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+{
+	GameWindow* gWindow = (GameWindow*)owner;
+	if (gWindow->GetGold() >= 200)
+	{
+		gWindow->SetGold(gWindow->GetGold() - 200);
+		gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::MageTower);
+		gWindow->UpdateInterface();
+	}
+}
+
+void DestroyTowerButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
+{
+	GameWindow* gWindow = (GameWindow*)owner;
+	switch (gWindow->GetTarget()->GetType())
+	{
+	case TowerType::ArcherTower:
+		gWindow->SetGold(gWindow->GetGold() + 50);
+		break;
+	case TowerType::MageTower:
+		gWindow->SetGold(gWindow->GetGold() + 100);
+		break;
+	}
+	gWindow->LoadTowerInfo(gWindow->GetTarget(), TowerType::None);
+	gWindow->UpdateInterface();
 }
 
 void LevelOneButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
 {
-
+	GameWindow* gWindow = (GameWindow*)owner;
+	gWindow->LoadLevel(1);
 }
 
 void LevelTwoButton_Click(Object* owner, Object* sender, SDL_MouseButtonEvent e)
 {
-
+	GameWindow* gWindow = (GameWindow*)owner;
+	gWindow->LoadLevel(2);
 }
 
+void GameWindowTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
+{
+	GameWindow* window = (GameWindow*)owner;
+	// Волны / победа
+	if (window->GetWavesCount() > window->GetWave())
+	{
+		window->SetWave(window->GetWave() + 1);
+	}
+	else
+	{
+		window->SetTarget(nullptr);
+		window->SetIsWin();
+		window->Stop();
+	}
+}
+
+void TowerTimer_Tick(Object* owner, Timer* sender, Uint32 deltaTime)
+{
+	GameWindow* window = (GameWindow*)owner;
+	Tower* tower = (Tower*)sender;
+	if (window->GetIsEnabled())
+	{
+		tower->SetIsReady(true);
+	}
+}
+
+void GameWindow_Update(Object* owner, Uint32 deltaTime)
+{
+	GameWindow* window = (GameWindow*)owner;
+	window->UpdateWaveTimeText();
+	if (window->GetIsEnabled())
+	{
+		window->SpawnEnemies(deltaTime);
+		window->MoveEnemies(deltaTime);
+		window->TowersShoot();
+		if (window->GetHealth() <= 0)
+		{
+			window->SetTarget(nullptr);
+			window->SetIsDefeat();
+			window->Stop();
+		}
+	}
+}

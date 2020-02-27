@@ -1,85 +1,5 @@
 #include "Window.h"
 
-void Window::Tick(Uint32 deltaTime)
-{
-	// virtual
-}
-
-void Window::LocationChanged(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::SizeChanged(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::StateChanged(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::MouseEnter(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::MouseLeave(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::Activated(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::Deactivated(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::Closed(SDL_WindowEvent e)
-{
-	// virtual
-}
-
-void Window::KeyDown(SDL_KeyboardEvent e)
-{
-	// virtual
-}
-
-void Window::KeyUp(SDL_KeyboardEvent e)
-{
-	// virtual
-}
-
-void Window::TextInput(SDL_TextInputEvent e)
-{
-	// virtual
-}
-
-void Window::MouseMove(SDL_MouseMotionEvent e)
-{
-	// virtual
-}
-
-void Window::MouseDown(SDL_MouseButtonEvent e)
-{
-	// virtual
-}
-
-void Window::MouseUp(SDL_MouseButtonEvent e)
-{
-	// virtual
-}
-
-void Window::MouseWheel(SDL_MouseWheelEvent e)
-{
-	// virtual
-}
-
 Window::~Window()
 {
 	SDL_DestroyWindow(window);
@@ -88,108 +8,250 @@ Window::~Window()
 
 void Window::InvokeWindowEventMoved(SDL_WindowEvent e)
 {
-	this->LocationChanged(e);
+	if (LocationChanged)
+	{
+		LocationChanged(this, e);
+	}
 }
 
 void Window::InvokeWindowEventSizeChanged(SDL_WindowEvent e)
 {
 	SDL_GetWindowSize(window, &width, &height);
-	SizeChanged(e);
+	if (SizeChanged)
+	{
+		SizeChanged(this, e);
+	}
 }
 
 void Window::InvokeWindowEventMinimized(SDL_WindowEvent e)
 {
 	windowState = WindowState::Minimized;
-	StateChanged(e);
+	if (StateChanged)
+	{
+		StateChanged(this, e);
+	}
 }
 
 void Window::InvokeWindowEventMaximized(SDL_WindowEvent e)
 {
 	windowState = WindowState::Maximized;
-	StateChanged(e);
+	if (StateChanged)
+	{
+		StateChanged(this, e);
+	}
 }
 
 void Window::InvokeWindowEventRestored(SDL_WindowEvent e)
 {
 	windowState = WindowState::Restored;
-	StateChanged(e);
+	if (StateChanged)
+	{
+		StateChanged(this, e);
+	}
 }
 
 void Window::InvokeWindowEventEnter(SDL_WindowEvent e)
 {
-	this->MouseEnter(e);
+	if (MouseEnter)
+	{
+		MouseEnter(this, e);
+	}
 }
 
 void Window::InvokeWindowEventLeave(SDL_WindowEvent e)
 {
-	this->MouseLeave(e);
+	if (MouseLeave)
+	{
+		MouseLeave(this, e);
+	}
 }
 
 void Window::InvokeWindowEventFocusGained(SDL_WindowEvent e)
 {
-	this->Activated(e);
+	if (Activated)
+	{
+		Activated(this, e);
+	}
 }
 
 void Window::InvokeWindowEventFocusLost(SDL_WindowEvent e)
 {
-	this->Deactivated(e);
+	if (Deactivated)
+	{
+		Deactivated(this, e);
+	}
 }
 
 void Window::InvokeWindowEventClose(SDL_WindowEvent e)
 {
-	this->Closed(e);
+	if (Closed)
+	{
+		Closed(this, e);
+	}
 }
 
 void Window::InvokeEventKeyDown(SDL_KeyboardEvent e)
 {
-	this->KeyDown(e);
+	if (KeyDown)
+	{
+		KeyDown(this, e);
+	}
 }
 
 void Window::InvokeEventKeyUp(SDL_KeyboardEvent e)
 {
-	this->KeyUp(e);
+	if (KeyUp)
+	{
+		KeyUp(this, e);
+	}
 }
 
 void Window::InvokeEventTextInput(SDL_TextInputEvent e)
 {
-	this->TextInput(e);
+	if (TextInput)
+	{
+		TextInput(this, e);
+	}
 }
 
 void Window::InvokeEventMouseMotion(SDL_MouseMotionEvent e)
 {
-	this->MouseMove(e);
+	if (MouseMove)
+	{
+		MouseMove(this, e);
+	}
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseMotion(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseMotion(this, e);
+		}
 	}
 }
 
 void Window::InvokeEventMouseButtonDown(SDL_MouseButtonEvent e)
 {
-	this->MouseDown(e);
+	if (MouseDown)
+	{
+		MouseDown(this, e);
+	}
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseButtonDown(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseButtonDown(this, e);
+		}
 	}
 }
 
 void Window::InvokeEventMouseButtonUp(SDL_MouseButtonEvent e)
 {
-	this->MouseUp(e);
+	if (MouseUp)
+	{
+		MouseUp(this, e);
+	}
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseButtonUp(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseButtonUp(this, e);
+		}
 	}
-
 }
 
 void Window::InvokeEventMouseWheel(SDL_MouseWheelEvent e)
 {
-	this->MouseWheel(e);
+	if (MouseWheel)
+	{
+		MouseWheel(this, e);
+	}
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		vElements[i]->InvokeEventMouseWheel(this, e);
+		if (vElements[i]->GetIsVisible())
+		{
+			vElements[i]->InvokeEventMouseWheel(this, e);
+		}
 	}
+}
+
+void Window::SetUpdate(void Update(Object* sender, Uint32 deltaTime))
+{
+	this->Update = Update;
+}
+
+void Window::SetLocationChanged(void LocationChanged(Object* sender, SDL_WindowEvent e))
+{
+	this->LocationChanged = LocationChanged;
+}
+
+void Window::SetSizeChanged(void SizeChanged(Object* sender, SDL_WindowEvent e))
+{
+	this->SizeChanged = SizeChanged;
+}
+
+void Window::SetStateChanged(void StateChanged(Object* sender, SDL_WindowEvent e))
+{
+	this->StateChanged = StateChanged;
+}
+
+void Window::SetMouseEnter(void MouseEnter(Object* sender, SDL_WindowEvent e))
+{
+	this->MouseEnter = MouseEnter;
+}
+
+void Window::SetMouseLeave(void MouseLeave(Object* sender, SDL_WindowEvent e))
+{
+	this->MouseLeave = MouseLeave;
+}
+
+void Window::SetActivated(void Activated(Object* sender, SDL_WindowEvent e))
+{
+	this->Activated = Activated;
+}
+
+void Window::SetDeactivated(void Deactivated(Object* sender, SDL_WindowEvent e))
+{
+	this->Deactivated = Deactivated;
+}
+
+void Window::SetClosed(void Closed(Object* sender, SDL_WindowEvent e))
+{
+	this->Closed = Closed;
+}
+
+void Window::SetKeyDown(void KeyDown(Object* sender, SDL_KeyboardEvent e))
+{
+	this->KeyDown = KeyDown;
+}
+
+void Window::SetKeyUp(void KeyUp(Object* sender, SDL_KeyboardEvent e))
+{
+	this->KeyUp = KeyUp;
+}
+
+void Window::SetTextInput(void TextInput(Object* sender, SDL_TextInputEvent e))
+{
+	this->TextInput = TextInput;
+}
+
+void Window::SetMouseMove(void MouseMove(Object* sender, SDL_MouseMotionEvent e))
+{
+	this->MouseMove = MouseMove;
+}
+
+void Window::SetMouseDown(void MouseDown(Object* sender, SDL_MouseButtonEvent e))
+{
+	this->MouseDown = MouseDown;
+}
+
+void Window::SetMouseUp(void MouseUp(Object* sender, SDL_MouseButtonEvent e))
+{
+	this->MouseDown = MouseDown;
+}
+
+void Window::SetMouseWheel(void MouseWheel(Object* sender, SDL_MouseWheelEvent e))
+{
+	this->MouseDown = MouseDown;
 }
 
 void Window::Initialize()
@@ -214,22 +276,29 @@ void Window::Initialize()
 		SDL_RendererFlags::SDL_RENDERER_ACCELERATED |
 		(vSync ? SDL_RendererFlags::SDL_RENDERER_PRESENTVSYNC : 0)
 	);
+	AddTimer(this);
 }
 
 void Window::UpdateLayout()
 {
-	int tick = SDL_GetTicks();
-	Tick(tick - lastTick);
-	for (int i = 0; i < vElements.size(); i++)
+	// Обрабтка таймеров
+	Uint32 tick = SDL_GetTicks();
+	Uint32 deltaTime = tick - lastTick;
+	if (Update)
 	{
-		vElements[i]->InvokeEventUpdate(this, tick - lastTick);
+		Update(this, deltaTime);
+	}
+	for (int i = 0; i < timers.size(); i++)
+	{
+		timers[i]->InvokeEventTick(this, deltaTime);
 	}
 	lastTick = tick;
 
+	// Отрисовка окна
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < vElements.size(); i++)
 	{
-		if (vElements[i]->GetVisualResource())
+		if (vElements[i]->GetVisualResource() && vElements[i]->GetIsVisible())
 		{
 			if (vElements[i]->GetVisualResource()->GetIsUpdated())
 			{
@@ -364,6 +433,33 @@ void Window::RemoveVisualElement(VisualElement* vElement)
 		if (vElements[i]  == vElement)
 		{
 			vElements.erase(vElements.begin() + i--);
+		}
+	}
+}
+
+void Window::AddTimer(Timer* timer)
+{
+	bool inserted = false;
+	for (int i = 0; i < timers.size(); i++)
+	{
+		if (timers[i] == timer)
+		{
+			inserted = true;
+		}
+	}
+	if (!inserted)
+	{
+		timers.push_back(timer);
+	}
+}
+
+void Window::RemoveTimer(Timer* timer)
+{
+	for (int i = 0; i < timers.size(); i++)
+	{
+		if (timers[i] == timer)
+		{
+			timers.erase(timers.begin() + i--);
 		}
 	}
 }
