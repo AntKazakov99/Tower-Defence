@@ -61,7 +61,11 @@ class GameWindow :
 	Text* buildMageTower = new Text("Построить башню мага\n(Стоимость: 200)");
 	// Кнопка поломки башни
 	Text* destroyTower = new Text();
-	
+	// 
+	Text* victoryText = new Text("Победа");
+	//
+	Text* defeatText = new Text("Поражение");
+
 public:
 	GameWindow();
 
@@ -109,6 +113,10 @@ public:
 	void TowersShoot();
 	//  Возвращает количество противников на уровне
 	int GetEnemiesCount();
+	// Задает победу
+	void SetIsWin();
+	// Задает поражение
+	void SetIsDefeat();
 
 };
 
